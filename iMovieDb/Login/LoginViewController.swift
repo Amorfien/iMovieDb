@@ -49,7 +49,8 @@ final class LoginViewController: UIViewController {
     private lazy var loginButton: LoginButton = {
         let button = LoginButton()
         button.setTitle("Login", for: .normal)
-        button.isEnabled = false
+        // TODO: - disable button
+//        button.isEnabled = false
         button.addTarget(self, action: #selector(loginDidTap), for: .touchUpInside)
         return button
     }()
@@ -85,7 +86,8 @@ final class LoginViewController: UIViewController {
     }
 
     @objc private func loginDidTap() {
-        let listViewController = ListViewController(loginTitle: loginTextField.text!)
+        let listViewModel = ListViewModel(networkService: NetworkService())
+        let listViewController = ListViewController(loginTitle: loginTextField.text!, viewModel: listViewModel)
 //        navigationController?.pushViewController(listViewController, animated: true)
         navigationController?.setViewControllers([listViewController], animated: true)
     }
