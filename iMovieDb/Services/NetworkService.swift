@@ -38,7 +38,7 @@ final class NetworkService: NetworkServiceProtocol {
 
 
     // MARK: - URL session
-    private func session(movieId: String, completion: @escaping (Result<Data, Error>) -> ()) {
+    private func movieSession(movieId: String, completion: @escaping (Result<Data, Error>) -> ()) {
 
         let urlStr = tunnel + server + movieId + apiKey
         guard let apiURL = URL(string: urlStr) else { return }
@@ -52,6 +52,21 @@ final class NetworkService: NetworkServiceProtocol {
             completion(.success(data))
         }.resume()
     }
+    private func imageSession(urlString: String, completion: @escaping (Data?) -> Void) {
+        guard let url = URL(string: urlString) else {
+            print("⚔️ No URL")
+            return
+        }
+        let session = URLSession.shared
+        let task = session.dataTask(with: url) { data, response, error in
+            guard let data else {
+                completion(nil)
+                return
+            }
+            completion(data)
+        }
+        task.resume()
+    }
 
     let group = DispatchGroup()
 
@@ -62,20 +77,23 @@ final class NetworkService: NetworkServiceProtocol {
         for movie in movieList {
             group.enter()
 
-            session(movieId: movie) { result in
+            movieSession(movieId: movie) { result in
                 switch result {
                 case .success(let data):
                     do {
-                        let movie = try JSONDecoder().decode(Movie.self, from: data)
-                        dataList.append(movie)
-                        print(dataList.count)
+                        var movie = try JSONDecoder().decode(Movie.self, from: data)
+                        self.imageSession(urlString: movie.poster) { data in
+                            movie.posterData = data
+                            dataList.append(movie)
+                            print(movie.posterData)
+                            self.group.leave()
+                        }
 
                     } catch {
                         print("❗️ Decode Error")
                     }
                 case .failure(let error): print("‼️ Request Error ", error)
                 }
-                self.group.leave()
             }
 
         }

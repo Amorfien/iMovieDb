@@ -21,7 +21,7 @@ final class MovieTableViewCell: UITableViewCell {
 
     private let movieImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = .systemFill
+//        imageView.backgroundColor = .systemFill
         imageView.contentMode = .scaleAspectFit
         imageView.layer.cornerRadius = 8
         imageView.clipsToBounds = true
@@ -120,7 +120,11 @@ final class MovieTableViewCell: UITableViewCell {
         titleLabel.text = movie.title// + " lorum ipsum mlm sldk ml mdlkfm ;dm ;dlfm ;dflm dfm "
         genreLabel.text = movie.genre
         descriptionLabel.text = movie.plot
-        movieImageView.image = UIImage(named: "poster")
+        if let data = movie.posterData {
+            movieImageView.image = UIImage(data: data)
+        } else {
+            movieImageView.image = UIImage(named: "poster")
+        }
         countryLabel.text = movie.country
         timeLabel.text = "2 h 10 m"
         ratingLabel.text = "⭐️ " + movie.imdbRating

@@ -44,7 +44,9 @@ final class ListViewModel: ListViewModelProtocol {
         switch viewInput {
         case .loadButtonDidTap:
             state = .loading
-            networkService.loadMovies(movieList: networkService.movieList) { moviesData in
+            // убираем повторяющиеся элементы из списка
+            let movieList = Array(Set(networkService.movieList))
+            networkService.loadMovies(movieList: movieList) { moviesData in
                 self.state = .loaded(movies: moviesData.sorted())
                 print("🌞 ", moviesData.count)
             }
