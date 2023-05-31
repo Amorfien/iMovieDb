@@ -44,19 +44,10 @@ final class ListViewModel: ListViewModelProtocol {
         switch viewInput {
         case .loadButtonDidTap:
             state = .loading
-            networkService.loadMovies { [weak self] result in
-                switch result {
-                case .success(let movies):
-                    self?.state = .loaded(movies: movies)
-//                    print("1")
-                case .failure(let error):
-                    self?.state = .error(error)
-//                    print("2")
-                }
+            networkService.loadMovies(movieList: networkService.movieList) { moviesData in
+                self.state = .loaded(movies: moviesData.sorted())
+                print("🌞 ", moviesData.count)
             }
-//            networkService.loadMovies { [weak self] movie in
-//
-//            }
         case let .movieDidSelect(movie):
             print("test \(movie.title)")
 //            coordinator?.pushBookViewController(forBook: book)

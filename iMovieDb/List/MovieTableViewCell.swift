@@ -57,7 +57,7 @@ final class MovieTableViewCell: UITableViewCell {
 
     private let ratingLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
 
         return label
     }()
@@ -104,9 +104,9 @@ final class MovieTableViewCell: UITableViewCell {
 
             countryLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             countryLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-            countryLabel.widthAnchor.constraint(equalToConstant: 120),
+            countryLabel.widthAnchor.constraint(equalToConstant: 150),
 
-            timeLabel.leadingAnchor.constraint(equalTo: countryLabel.trailingAnchor, constant: 40),
+            timeLabel.trailingAnchor.constraint(equalTo: ratingLabel.leadingAnchor, constant: -12),
             timeLabel.bottomAnchor.constraint(equalTo: countryLabel.bottomAnchor),
 
             ratingLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: -8),

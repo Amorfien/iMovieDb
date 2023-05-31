@@ -8,7 +8,8 @@
 import Foundation
 
 protocol NetworkServiceProtocol: AnyObject {
-    func loadMovies(completion: @escaping ((Result<[Movie], Error>) -> Void))
+    var movieList: [String] { get }
+    func loadMovies(movieList: [String], completion: @escaping ([Movie]) -> Void)
 }
 
 final class NetworkService: NetworkServiceProtocol {
@@ -20,49 +21,26 @@ final class NetworkService: NetworkServiceProtocol {
 
 //http://www.omdbapi.com/?i=tt3896198&apikey=5e8b6bfc
 
-    private let localMovies: [Movie] = [localMovie, localMovie, localMovie, localMovie]
-
-    func loadMovies(completion: @escaping ((Result<[Movie], Error>) -> Void)) {
-//        DispatchQueue.global().async {
-//            sleep(3)
-//            completion(.success(self.localMovies))
-//            print("success")
-//        }
-
-        let movieList = [
-            "tt0120737",
-            "tt0265086",
-            "tt0093058",
-            "tt0111161",
-            "tt0068646",
-            "tt0108052",
-            "tt0120737",
-            "tt0109830",
-            "tt1375666",
-            "tt0133093",
-            "tt0120815",
-            "tt0110357"
-        ]
-        session(movieId: movieList[Int.random(in: 0..<movieList.count)]) { result in
-            switch result {
-            case .success(let data):
-                do {
-                    let movie = try JSONDecoder().decode(Movie.self, from: data)
-                    completion(.success([movie]))
-                } catch {}
-            case .failure(let error): print(error)
-            }
-        }
-
-
-    }
+    var movieList = [
+        "tt0120737",
+        "tt0265086",
+        "tt0093058",
+        "tt0111161",
+        "tt0068646",
+        "tt0108052",
+        "tt0120737",
+        "tt0109830",
+        "tt1375666",
+        "tt0133093",
+        "tt0120815",
+        "tt0110357"
+    ]
 
 
     // MARK: - URL session
     private func session(movieId: String, completion: @escaping (Result<Data, Error>) -> ()) {
 
         let urlStr = tunnel + server + movieId + apiKey
-        // поддержка кириллицы в URL
         guard let apiURL = URL(string: urlStr) else { return }
         URLSession.shared.dataTask(with: apiURL) { data, response, error in
             guard let data else {
@@ -74,6 +52,41 @@ final class NetworkService: NetworkServiceProtocol {
             completion(.success(data))
         }.resume()
     }
+
+    let group = DispatchGroup()
+
+    func loadMovies(movieList: [String], completion: @escaping ([Movie]) -> Void) {
+
+        var dataList: [Movie] = []
+
+        for movie in movieList {
+            group.enter()
+
+            session(movieId: movie) { result in
+                switch result {
+                case .success(let data):
+                    do {
+                        let movie = try JSONDecoder().decode(Movie.self, from: data)
+                        dataList.append(movie)
+                        print(dataList.count)
+
+                    } catch {
+                        print("❗️ Decode Error")
+                    }
+                case .failure(let error): print("‼️ Request Error ", error)
+                }
+                self.group.leave()
+            }
+
+        }
+
+        group.notify(queue: .main, work: DispatchWorkItem(block: {
+            completion(dataList)
+            print("📣 Handled films ", dataList.count)
+        }))
+
+    }
+
 
     
 }

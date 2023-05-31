@@ -13,7 +13,11 @@ final class ListViewController: UIViewController {
 
     private let loginTitle: String
 
-    private var movies: [Movie] = []
+    private var movies: [Movie] = [] {
+        didSet {
+            print("☘️ ", movies.count)
+        }
+    }
 
     private lazy var downloadButton: UIButton = {
         let button = UIButton()
