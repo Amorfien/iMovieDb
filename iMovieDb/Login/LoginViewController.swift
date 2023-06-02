@@ -9,10 +9,15 @@ import UIKit
 
 final class LoginViewController: UIViewController {
 
+    private var lastUser: String = ""
+
+    private var viewModel: LoginViewModelProtocol
+
     private let stackView: UIStackView = {
         let view = UIStackView()
         view.axis = .vertical
-        view.backgroundColor = .systemGray5
+        view.spacing = 0.5
+        view.backgroundColor = .lightGray
         view.distribution = .fillProportionally
         view.layer.borderColor = UIColor.lightGray.cgColor
         view.layer.borderWidth = 0.5
@@ -25,6 +30,7 @@ final class LoginViewController: UIViewController {
     private lazy var loginTextField: TextFieldWithPadding = {
         let login = TextFieldWithPadding()
         login.placeholder = "Login"
+        login.backgroundColor = .systemGray5
         login.keyboardType = .emailAddress
         login.font = UIFont.systemFont(ofSize: 16)
         login.autocapitalizationType = .none
@@ -37,6 +43,7 @@ final class LoginViewController: UIViewController {
     private lazy var passwordTextField: TextFieldWithPadding = {
         let password = TextFieldWithPadding()
         password.placeholder = "Password"
+        password.backgroundColor = .systemGray5
         password.isSecureTextEntry = true
         password.font = UIFont.systemFont(ofSize: 16)
         password.autocapitalizationType = .none
@@ -55,6 +62,36 @@ final class LoginViewController: UIViewController {
         return button
     }()
 
+    // MARK: - INIT
+    init(viewModel: LoginViewModelProtocol) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    func bindViewModel() {
+        print("--------")
+        viewModel.onStateDidChange = { [weak self] state in
+            guard let self else {
+                print("???????\n")
+                return
+            }
+            switch state {
+            case .login:
+                print("1")
+            case .initial:
+                print("2")
+            case .error(_):
+                print("3")
+            }
+        }
+    }
+
+
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
@@ -62,13 +99,12 @@ final class LoginViewController: UIViewController {
     }
 
     private func setupView() {
+        lastUser = UserSettings.lastUser
+        loginTextField.text = lastUser
         view.backgroundColor = .systemGray4
         view.addSubview(stackView)
         view.addSubview(loginButton)
         stackView.addArrangedSubview(loginTextField)
-        let lineView = UIView()
-        lineView.backgroundColor = .lightGray
-        stackView.addArrangedSubview(lineView)
         stackView.addArrangedSubview(passwordTextField)
 
         NSLayoutConstraint.activate([
@@ -76,8 +112,6 @@ final class LoginViewController: UIViewController {
             stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -80),
             stackView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
             stackView.heightAnchor.constraint(equalToConstant: 100),
-
-            lineView.heightAnchor.constraint(equalToConstant: 0.5),
 
             loginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             loginButton.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 40),

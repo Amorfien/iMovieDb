@@ -131,7 +131,7 @@ final class ListViewController: UIViewController {
     }
 
     @objc private func logout() {
-        let loginViewController = LoginViewController()
+        let loginViewController = LoginViewController(viewModel: LoginViewModel(userChecker: UserChecker()))
         navigationController?.setViewControllers([loginViewController], animated: true)
     }
 

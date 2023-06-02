@@ -18,7 +18,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         self.window = UIWindow(windowScene: windowScene)
         self.window?.overrideUserInterfaceStyle = .light //отключение возможности тёмной темы
-        let loginViewController = LoginViewController()
+        let loginViewModel = LoginViewModel(userChecker: UserChecker())
+        let loginViewController = LoginViewController(viewModel: loginViewModel)
         self.window?.rootViewController = UINavigationController(rootViewController: loginViewController)
         self.window?.makeKeyAndVisible()
 
