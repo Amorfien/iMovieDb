@@ -15,34 +15,34 @@ final class DetailsViewController: UIViewController {
         return scrollView
     }()
 
-    private let descriptionLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.textColor = .darkText
-        label.font = UIFont.systemFont(ofSize: 24, weight: .regular)
-        return label
-    }()
+    private let posterImageView = UIImageView()
+    private let verticalStack = UIStackView()
+    private let countryStack = DetailsStackView(type: .country, fontSize: 14)
+    private let timeStack = DetailsStackView(type: .time, fontSize: 14)
+    private let genreStack = DetailsStackView(type: .genre, fontSize: 14)
+    private let ratedStack = DetailsStackView(type: .rated, fontSize: 14)
+    private let directorStack = DetailsStackView(type: .director, fontSize: 14)
+
+    private let descriptionStack = DetailsStackView(type: .description, fontSize: 18)
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.navigationBar.prefersLargeTitles = true
+//        navigationController?.navigationBar.prefersLargeTitles = true
 //        self.title = "Guardians of the Galaxy Vol. 2"
-        navigationItem.title = "Guardians of the Galaxy Vol. 2"
+//        navigationItem.title = "Guardians of the Galaxy Vol. 2"
         navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.orange]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.orange]
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
 
-        descriptionLabel.text = """
-{"Title":"Guardians of the Galaxy Vol. 2","Year":"2017","Rated":"PG-13","Released":"05 May 2017","Runtime":"136 min","Genre":"Action, Adventure, Comedy","Director":"James Gunn","Writer":"James Gunn, Dan Abnett, Andy Lanning","Actors":"Chris Pratt, Zoe Saldana, Dave Bautista","Plot":"The Guardians struggle to keep together as a team while dealing with their personal family issues, notably Star-Lord's encounter with his father, the ambitious celestial being Ego.","Language":"English","Country":"United States","Awards":"Nominated for 1 Oscar. 15 wins & 60 nominations total","Poster":"https://m.media-amazon.com/images/M/MV5BNjM0NTc0NzItM2FlYS00YzEwLWE0YmUtNTA2ZWIzODc2OTgxXkEyXkFqcGdeQXVyNTgwNzIyNzg@._V1_SX300.jpg","Ratings":[{"Source":"Internet Movie Database","Value":"7.6/10"},{"Source":"Rotten Tomatoes","Value":"85%"},{"Source":"Metacritic","Value":"67/100"}],"Metascore":"67","imdbRating":"7.6","imdbVotes":"712,189","imdbID":"tt3896198","Type":"movie","DVD":"22 Aug 2017","BoxOffice":"$389,813,101","Production":"N/A","Website":"N/A","Response":"True"}
-"""
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        navigationController?.navigationBar.prefersLargeTitles = false
+//        navigationController?.navigationBar.prefersLargeTitles = false
     }
 
     private func setupView() {
@@ -50,11 +50,22 @@ final class DetailsViewController: UIViewController {
         view.addSubview(scrollView)
         scrollView.backgroundColor = .lightGray
 
-        let views: [UIView] = [descriptionLabel]
+        let views: [UIView] = [posterImageView, verticalStack, descriptionStack]
         views.forEach { view in
             scrollView.addSubview(view)
             view.translatesAutoresizingMaskIntoConstraints = false
         }
+
+        posterImageView.contentMode = .scaleAspectFit
+        verticalStack.axis = .vertical
+        verticalStack.distribution = .equalSpacing
+        verticalStack.spacing = 8
+        verticalStack.translatesAutoresizingMaskIntoConstraints = false
+        verticalStack.addArrangedSubview(countryStack)
+        verticalStack.addArrangedSubview(timeStack)
+        verticalStack.addArrangedSubview(genreStack)
+        verticalStack.addArrangedSubview(directorStack)
+        verticalStack.addArrangedSubview(ratedStack)
 
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -62,11 +73,38 @@ final class DetailsViewController: UIViewController {
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 
-            descriptionLabel.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            descriptionLabel.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
+            posterImageView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: Resources.padding),
+            posterImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Resources.padding),
+            posterImageView.trailingAnchor.constraint(equalTo: view.centerXAnchor),
+            posterImageView.heightAnchor.constraint(equalTo: posterImageView.widthAnchor, multiplier: 1.48),
+
+            verticalStack.topAnchor.constraint(equalTo: posterImageView.topAnchor),
+            verticalStack.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: Resources.padding),
+            verticalStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Resources.padding),
+            verticalStack.bottomAnchor.constraint(equalTo: posterImageView.bottomAnchor),
+
+            descriptionStack.topAnchor.constraint(equalTo: posterImageView.bottomAnchor, constant: 20),
+            descriptionStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Resources.padding),
+            descriptionStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Resources.padding),
+//            descriptionStack.heightAnchor.constraint(equalToConstant: 100),
+            descriptionStack.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
+
+//            descriptionLabel.topAnchor.constraint(equalTo: scrollView.topAnchor),
+//            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+//            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+//            descriptionLabel.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
         ])
+    }
+
+    func fillData(title: String, country: String, time: String, genre: String, description: String, poster: Data?, rating: String, rated: String, director: String) {
+        self.title = title
+        self.posterImageView.image = UIImage(named: "poster")
+        descriptionStack.fillText(description)
+        countryStack.fillText(country)
+        timeStack.fillText(time)
+        genreStack.fillText(genre)
+        directorStack.fillText(director)
+        ratedStack.fillText(rated)
     }
 
 }

@@ -85,7 +85,7 @@ final class NetworkService: NetworkServiceProtocol {
                         self.imageSession(urlString: movie.poster) { data in
                             movie.posterData = data
                             dataList.append(movie)
-                            print(movie.posterData)
+//                            print(movie.posterData)
                             self.group.leave()
                         }
 

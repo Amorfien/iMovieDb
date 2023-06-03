@@ -75,7 +75,7 @@ final class MovieTableViewCell: UITableViewCell {
 
     private func setupView() {
 
-        self.backgroundColor = .systemBackground
+//        self.backgroundColor = .systemBackground
 
         let views: [UIView] = [titleLabel, movieImageView, genreLabel, descriptionLabel, countryLabel, timeLabel, ratingLabel]
         views.forEach { view in
@@ -118,7 +118,7 @@ final class MovieTableViewCell: UITableViewCell {
 
     func fillData(with movie: Movie) {
         titleLabel.text = movie.title// + " lorum ipsum mlm sldk ml mdlkfm ;dm ;dlfm ;dflm dfm "
-        genreLabel.text = movie.genre
+        genreLabel.text = "\(movie.genre). \(movie.year) year"
         descriptionLabel.text = movie.plot
         if let data = movie.posterData {
             movieImageView.image = UIImage(data: data)
@@ -126,7 +126,7 @@ final class MovieTableViewCell: UITableViewCell {
             movieImageView.image = UIImage(named: "poster")
         }
         countryLabel.text = movie.country
-        timeLabel.text = "2 h 10 m"
+        timeLabel.text = movie.timing
         ratingLabel.text = "⭐️ " + movie.imdbRating
     }
 

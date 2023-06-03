@@ -146,6 +146,7 @@ extension ListViewController: UITableViewDataSource, UITableViewDelegate {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MovieTableViewCell.cellIdentifier, for: indexPath) as? MovieTableViewCell
         else { return MovieTableViewCell() }
 
+        cell.backgroundColor = UIColor(named: indexPath.row % 2 == 0 ? "listEven" : "listOdd")
         cell.fillData(with: movies[indexPath.row])
 
         return cell
