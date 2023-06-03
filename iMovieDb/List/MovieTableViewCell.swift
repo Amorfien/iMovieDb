@@ -126,7 +126,7 @@ final class MovieTableViewCell: UITableViewCell {
             movieImageView.image = UIImage(named: "poster")
         }
         countryLabel.text = movie.country
-        timeLabel.text = movie.timing
+        timeLabel.text = movie.runtime
         ratingLabel.text = "⭐️ " + movie.imdbRating
     }
 

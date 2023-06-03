@@ -11,8 +11,8 @@ import Foundation
 struct Movie: Codable {
 
     let title, year, rated, released: String
-    let runtime, genre, director, writer: String
-    var timing: String = ""
+    let genre, director, writer: String
+    var runtime: String
     let actors, plot, country: String
     let awards: String
     let poster: String
@@ -20,7 +20,6 @@ struct Movie: Codable {
     let ratings: [Rating]
     let metascore, imdbRating, imdbVotes, imdbID: String
     let type, boxOffice: String
-    let response: String
 
     enum CodingKeys: String, CodingKey {
         case title = "Title"
@@ -42,7 +41,6 @@ struct Movie: Codable {
         case imdbRating, imdbVotes, imdbID
         case type = "Type"
         case boxOffice = "BoxOffice"
-        case response = "Response"
     }
 
     init(from decoder: Decoder) throws {
@@ -68,13 +66,12 @@ struct Movie: Codable {
         self.imdbID = try container.decode(String.self, forKey: .imdbID)
         self.type = try container.decode(String.self, forKey: .type)
         self.boxOffice = try container.decode(String.self, forKey: .boxOffice)
-        self.response = try container.decode(String.self, forKey: .response)
 
-//        self.runtime = timeFormatter(runtime: runtime)
-        self.timing = timeFormatter(runtime: runtime)
+        self.runtime = timeFormatter(runtime: runtime)
+//        self.timing = timeFormatter(runtime: runtime)
     }
 
-    init(title: String, year: String, rated: String, released: String, runtime: String, genre: String, director: String, writer: String, actors: String, plot: String, country: String, awards: String, poster: String, posterData: Data? = nil, ratings: [Rating], metascore: String, imdbRating: String, imdbVotes: String, imdbID: String, type: String, boxOffice: String, response: String) {
+    init(title: String, year: String, rated: String, released: String, runtime: String, genre: String, director: String, writer: String, actors: String, plot: String, country: String, awards: String, poster: String, posterData: Data? = nil, ratings: [Rating], metascore: String, imdbRating: String, imdbVotes: String, imdbID: String, type: String, boxOffice: String) {
         self.title = title
         self.year = year
         self.rated = rated
@@ -96,9 +93,8 @@ struct Movie: Codable {
         self.imdbID = imdbID
         self.type = type
         self.boxOffice = boxOffice
-        self.response = response
 
-        self.timing = "1h1m"
+        self.runtime = timeFormatter(runtime: runtime)
     }
 
     private func timeFormatter(runtime: String) -> String {
