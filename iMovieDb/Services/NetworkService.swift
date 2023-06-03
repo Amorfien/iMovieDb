@@ -99,6 +99,7 @@ final class NetworkService: NetworkServiceProtocol {
         }
 
         group.notify(queue: .main, work: DispatchWorkItem(block: {
+            sleep(1)
             completion(dataList)
             print("📣 Handled films ", dataList.count)
         }))

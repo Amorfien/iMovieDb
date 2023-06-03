@@ -20,10 +20,10 @@ final class DetailsViewController: UIViewController {
     private let countryStack = DetailsStackView(type: .country, fontSize: 14)
     private let timeStack = DetailsStackView(type: .time, fontSize: 14)
     private let genreStack = DetailsStackView(type: .genre, fontSize: 14)
-    private let ratedStack = DetailsStackView(type: .rated, fontSize: 14)
+    private let ratedStack = DetailsStackView(type: .rated, fontSize: 18)
     private let directorStack = DetailsStackView(type: .director, fontSize: 14)
 
-    private let descriptionStack = DetailsStackView(type: .description, fontSize: 18)
+    private let descriptionStack = DetailsStackView(type: .plot, fontSize: 18)
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -86,8 +86,7 @@ final class DetailsViewController: UIViewController {
             descriptionStack.topAnchor.constraint(equalTo: posterImageView.bottomAnchor, constant: 20),
             descriptionStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Resources.padding),
             descriptionStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Resources.padding),
-//            descriptionStack.heightAnchor.constraint(equalToConstant: 100),
-            descriptionStack.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
+            descriptionStack.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -Resources.padding)
 
 //            descriptionLabel.topAnchor.constraint(equalTo: scrollView.topAnchor),
 //            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -96,15 +95,41 @@ final class DetailsViewController: UIViewController {
         ])
     }
 
-    func fillData(title: String, country: String, time: String, genre: String, description: String, poster: Data?, rating: String, rated: String, director: String) {
-        self.title = title
-        self.posterImageView.image = UIImage(named: "poster")
-        descriptionStack.fillText(description)
-        countryStack.fillText(country)
-        timeStack.fillText(time)
-        genreStack.fillText(genre)
-        directorStack.fillText(director)
-        ratedStack.fillText(rated)
+    func fillData(with movie: Movie) {
+        self.title = movie.title
+        if  let data = movie.posterData {
+            self.posterImageView.image = UIImage(data: data)
+        } else {
+            self.posterImageView.image = UIImage(named: "defaultPoster")
+        }
+        descriptionStack.fillText(movie.plot)
+        countryStack.fillText(movie.country)
+        timeStack.fillText(movie.runtime)
+        genreStack.fillText(movie.genre)
+        directorStack.fillText(movie.director)
+        ratedStack.fillText(movie.rated)
     }
+    
 
 }
+///        self.title = title
+//        self.year = year
+///        self.rated = rated
+//        self.released = released
+//        self.runtime = runtime
+//        self.genre = genre
+//        self.director = director
+//        self.writer = writer
+//        self.actors = actors
+//        self.plot = plot
+//        self.country = country
+//        self.awards = awards
+//        self.poster = poster
+//        self.posterData = posterData
+//        self.ratings = ratings
+//        self.metascore = metascore
+//        self.imdbRating = imdbRating
+//        self.imdbVotes = imdbVotes
+//        self.imdbID = imdbID
+//        self.type = type
+//        self.boxOffice = boxOffice

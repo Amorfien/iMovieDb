@@ -23,9 +23,9 @@ final class ListViewModel: ListViewModelProtocol {
     enum ViewInput {
         case loadButtonDidTap
         case movieDidSelect(Movie)
+        case logOut
     }
 
-//    weak var coordinator: BooksListCoordinator?
     var onStateDidChange: ((State) -> Void)?
 
     private(set) var state: State = .initial {
@@ -52,8 +52,10 @@ final class ListViewModel: ListViewModelProtocol {
             }
         case let .movieDidSelect(movie):
             print("test \(movie.title)")
-//            coordinator?.pushBookViewController(forBook: book)
-//            print(coordinator)
+
+        case .logOut:
+            print("logoutout")
+            UserSettings.isLogin = false
         }
     }
 }

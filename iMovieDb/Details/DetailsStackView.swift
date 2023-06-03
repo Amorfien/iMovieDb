@@ -11,7 +11,7 @@ final class DetailsStackView: UIStackView {
 
     enum DetailType: String {
         case country
-        case description
+        case plot
         case year
         case time
         case director
@@ -25,7 +25,7 @@ final class DetailsStackView: UIStackView {
         label.numberOfLines = 1
 //        label.textColor = .red
 //        label.font = UIFont.systemFont(ofSize: 14, weight: .light)
-//        label.translatesAutoresizingMaskIntoConstraints = false
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     private let rightLabel: UILabel = {
@@ -61,7 +61,7 @@ final class DetailsStackView: UIStackView {
         self.addArrangedSubview(rightLabel)
 
         NSLayoutConstraint.activate([
-            leftLabel.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.33)
+            leftLabel.widthAnchor.constraint(equalToConstant: 56)
         ])
     }
 

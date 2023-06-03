@@ -11,7 +11,7 @@ final class ListViewController: UIViewController {
 
     private let viewModel: ListViewModelProtocol
 
-    private let loginTitle: String
+//    private let loginTitle: String
 
     private var movies: [Movie] = [] {
         didSet {
@@ -49,8 +49,8 @@ final class ListViewController: UIViewController {
         return tableView
     }()
 
-    init(loginTitle: String, viewModel: ListViewModelProtocol) {
-        self.loginTitle = loginTitle
+    init(viewModel: ListViewModelProtocol) {
+//        self.loginTitle = loginTitle
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -67,7 +67,7 @@ final class ListViewController: UIViewController {
     }
 
     private func setupNavigation() {
-        self.title = loginTitle
+//        self.title = loginTitle
         let logoutButton = UIBarButtonItem(image: UIImage(systemName: "door.right.hand.open"), style: .done, target: self, action: #selector(logout))
         navigationItem.rightBarButtonItem = logoutButton
     }
@@ -131,6 +131,7 @@ final class ListViewController: UIViewController {
     }
 
     @objc private func logout() {
+        viewModel.updateState(viewInput: .logOut)
         let loginViewController = LoginViewController(viewModel: LoginViewModel(userChecker: UserChecker()))
         navigationController?.setViewControllers([loginViewController], animated: true)
     }
@@ -155,6 +156,7 @@ extension ListViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let detailsViewController = DetailsViewController()
+        detailsViewController.fillData(with: movies[indexPath.row])
         navigationController?.pushViewController(detailsViewController, animated: true)
     }
 

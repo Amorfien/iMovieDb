@@ -81,11 +81,16 @@ final class LoginViewController: UIViewController {
             }
             switch state {
             case .login:
-                print("1")
+                print("Success Login")
+                let listViewModel = ListViewModel(networkService: NetworkService())
+                let listViewController = ListViewController(viewModel: listViewModel)
+                navigationController?.setViewControllers([listViewController], animated: true)
             case .initial:
-                print("2")
-            case .error(_):
-                print("3")
+                print("Hello")
+            case .error(let error):
+                let alert = UIAlertController(title: "Error", message: error.rawValue, preferredStyle: .alert)
+                alert.addAction(.init(title: "Cancel", style: .cancel))
+                self.present(alert, animated: true)
             }
         }
     }
@@ -96,6 +101,7 @@ final class LoginViewController: UIViewController {
         super.viewDidLoad()
         setupView()
         setupGestures()
+        bindViewModel()
     }
 
     private func setupView() {
@@ -120,10 +126,11 @@ final class LoginViewController: UIViewController {
     }
 
     @objc private func loginDidTap() {
-        let listViewModel = ListViewModel(networkService: NetworkService())
-        let listViewController = ListViewController(loginTitle: loginTextField.text!, viewModel: listViewModel)
-//        navigationController?.pushViewController(listViewController, animated: true)
-        navigationController?.setViewControllers([listViewController], animated: true)
+        viewModel.updateState(viewInput: .loginButtonDidTap(user: User(login: loginTextField.text ?? "",
+                                                                       password: passwordTextField.text ?? "")))
+//        let listViewModel = ListViewModel(networkService: NetworkService())
+//        let listViewController = ListViewController(viewModel: listViewModel)
+//        navigationController?.setViewControllers([listViewController], animated: true)
     }
     //  MARK: hide keyboard by tap
     private func setupGestures() {

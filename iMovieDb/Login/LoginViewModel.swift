@@ -12,19 +12,21 @@ protocol LoginViewModelProtocol: AnyObject {
     func updateState(viewInput: LoginViewModel.ViewInput)
 }
 
+
 final class LoginViewModel: LoginViewModelProtocol {
     enum State {
         case initial
         case login
-        case error(Error)
+        case error(LoginError)
     }
 
     enum ViewInput {
         case loginButtonDidTap(user: User)
-//        case movieDidSelect(Movie)
+    }
+    enum LoginError: String {
+        case wrongPassword = "Wrong Password"
     }
 
-//    weak var coordinator: BooksListCoordinator?
     var onStateDidChange: ((State) -> Void)?
 
     private(set) var state: State = .initial {
@@ -45,8 +47,11 @@ final class LoginViewModel: LoginViewModelProtocol {
             if userChecker.check(password: user.password) {
                 print("Login Success 🟢")
                 UserSettings.lastUser = user.login
+                UserSettings.isLogin = true
+                self.state = .login
             } else {
                 print("Wrong Password 🛑")
+                self.state = .error(.wrongPassword)
             }
         }
     }
