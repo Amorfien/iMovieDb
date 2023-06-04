@@ -16,30 +16,16 @@ final class NetworkService: NetworkServiceProtocol {
 
     private let tunnel = "http://"
     private let server = "www.omdbapi.com/?i="
-    private let movieId = "tt3896198"
-    private let apiKey = "&apikey=5e8b6bfc"
 
-//http://www.omdbapi.com/?i=tt3896198&apikey=5e8b6bfc
+    // obfuscation API-key
+    private let coded: [UInt8] = [0x26, 0x61, 0x70, 0x69, 0x6b, 0x65, 0x79, 0x3d, 0x35, 0x65, 0x38, 0x62, 0x36, 0x62, 0x66, 0x63]
 
-//    var movieList = [
-//        "tt0120737",
-//        "tt0265086",
-//        "tt0093058",
-//        "tt0111161",
-//        "tt0068646",
-//        "tt0108052",
-//        "tt0120737",
-//        "tt0109830",
-//        "tt1375666",
-//        "tt0133093",
-//        "tt0120815",
-//        "tt0110357"
-//    ]
 
 
     // MARK: - URL session
     private func movieSession(movieId: String, completion: @escaping (Result<Data, Error>) -> ()) {
-
+        let data = Data(coded)
+        let apiKey = String(data: data, encoding: .utf8) ?? ""
         let urlStr = tunnel + server + movieId + apiKey
         guard let apiURL = URL(string: urlStr) else { return }
         URLSession.shared.dataTask(with: apiURL) { data, response, error in
