@@ -23,7 +23,7 @@ final class LoginViewModel: LoginViewModelProtocol {
     enum ViewInput {
         case loginButtonDidTap(user: User)
     }
-    enum LoginError: String {
+    enum LoginError: String, Error {
         case wrongPassword = "Wrong Password"
     }
 
@@ -46,7 +46,7 @@ final class LoginViewModel: LoginViewModelProtocol {
         case .loginButtonDidTap(user: let user):
             if userChecker.check(password: user.password) {
                 print("Login Success 🟢")
-                UserSettings.lastUser = user.login
+                UserSettings.lastUser = user
                 UserSettings.isLogin = true
                 self.state = .login(user)
             } else {

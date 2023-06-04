@@ -8,7 +8,7 @@
 import Foundation
 
 protocol NetworkServiceProtocol: AnyObject {
-    var movieList: [String] { get }
+//    var movieList: [String] { get }
     func loadMovies(movieList: [String], completion: @escaping ([Movie]) -> Void)
 }
 
@@ -21,20 +21,20 @@ final class NetworkService: NetworkServiceProtocol {
 
 //http://www.omdbapi.com/?i=tt3896198&apikey=5e8b6bfc
 
-    var movieList = [
-        "tt0120737",
-        "tt0265086",
-        "tt0093058",
-        "tt0111161",
-        "tt0068646",
-        "tt0108052",
-        "tt0120737",
-        "tt0109830",
-        "tt1375666",
-        "tt0133093",
-        "tt0120815",
-        "tt0110357"
-    ]
+//    var movieList = [
+//        "tt0120737",
+//        "tt0265086",
+//        "tt0093058",
+//        "tt0111161",
+//        "tt0068646",
+//        "tt0108052",
+//        "tt0120737",
+//        "tt0109830",
+//        "tt1375666",
+//        "tt0133093",
+//        "tt0120815",
+//        "tt0110357"
+//    ]
 
 
     // MARK: - URL session
@@ -85,7 +85,7 @@ final class NetworkService: NetworkServiceProtocol {
                         self.imageSession(urlString: movie.poster) { data in
                             movie.posterData = data
                             dataList.append(movie)
-//                            print(movie.posterData)
+//                            print(movie.title)
                             self.group.leave()
                         }
 
@@ -101,7 +101,7 @@ final class NetworkService: NetworkServiceProtocol {
         group.notify(queue: .main, work: DispatchWorkItem(block: {
             sleep(1)
             completion(dataList)
-            print("📣 Handled films ", dataList.count)
+//            print("📣 Handled films ", dataList.count)
         }))
 
     }

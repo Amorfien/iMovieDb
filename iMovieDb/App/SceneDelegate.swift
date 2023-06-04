@@ -19,18 +19,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = UIWindow(windowScene: windowScene)
         self.window?.overrideUserInterfaceStyle = .light //отключение возможности тёмной темы
 
-//        if UserSettings.isLogin {
-//            let listViewModel = ListViewModel(networkService: NetworkService())
-//            let listViewController = ListViewController(viewModel: listViewModel)
-//            self.window?.rootViewController = UINavigationController(rootViewController: listViewController)
-//        } else {
-//            let loginViewModel = LoginViewModel(userChecker: UserChecker())
-//            let loginViewController = LoginViewController(viewModel: loginViewModel)
-//            self.window?.rootViewController = UINavigationController(rootViewController: loginViewController)
-//        }
+        if UserSettings.isLogin {
+            let listViewModel = ListViewModel(networkService: NetworkService(), user: UserSettings.lastUser!)
+            let listViewController = ListViewController(viewModel: listViewModel)
+            self.window?.rootViewController = UINavigationController(rootViewController: listViewController)
+        } else {
+            let loginViewModel = LoginViewModel(userChecker: UserChecker())
+            let loginViewController = LoginViewController(viewModel: loginViewModel)
+            self.window?.rootViewController = UINavigationController(rootViewController: loginViewController)
+        }
 
-        let detailsViewController = DetailsViewController(movie: localMovie)
-        self.window?.rootViewController = UINavigationController(rootViewController: detailsViewController)
+//        let detailsViewController = DetailsViewController(movie: localMovie)
+//        self.window?.rootViewController = UINavigationController(rootViewController: detailsViewController)
 
         self.window?.makeKeyAndVisible()
 

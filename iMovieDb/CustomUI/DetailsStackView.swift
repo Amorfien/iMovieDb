@@ -8,16 +8,17 @@
 import UIKit
 
 enum DetailType: String, CaseIterable {
-//    case .plot, .title, .country, .runtime, .genre, .director, .rated:
     case year
     case released
     case writer
     case actors
     case awards
     case metascore
-    case imdbRating, imdbVotes
+    case imdbRating
+    case imdbVotes
     case type
     case boxOffice
+    case totalSeasons
     case title
     case country
     case plot
@@ -28,29 +29,9 @@ enum DetailType: String, CaseIterable {
 }
 final class DetailsStackView: UIStackView {
 
+    private let leftLabel = UILabel(numberOfLines: 1, textAlignment: .left, fontSize: 14, fontWeight: .light)
 
-    private let leftLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 1
-//        label.adjustsFontSizeToFitWidth = true
-//        label.minimumScaleFactor = 0.7
-        label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-
-//        label.textColor = .red
-        label.font = UIFont.systemFont(ofSize: 14, weight: .light)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    private let rightLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.textAlignment = .right
-        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-//        label.textColor = .systemGray
-//        label.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
-//        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    private let rightLabel = UILabel(numberOfLines: 0, textAlignment: .right, fontSize: 14, fontWeight: .regular)
 
     init(type: DetailType, fontSize: CGFloat, fontWeight: UIFont.Weight) {
         super.init(frame: .zero)
@@ -58,11 +39,6 @@ final class DetailsStackView: UIStackView {
         self.rightLabel.font = .systemFont(ofSize: fontSize, weight: fontWeight)
         self.leftLabel.text = type.rawValue.capitalized + ":"
 
-//        distribution = .fillEqually
-//        distribution = .fillProportionally
-
-        
-//        spacing = 8
         setup()
     }
     
@@ -71,12 +47,10 @@ final class DetailsStackView: UIStackView {
     }
     
     private func setup() {
+        leftLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        rightLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         self.addArrangedSubview(leftLabel)
         self.addArrangedSubview(rightLabel)
-
-        NSLayoutConstraint.activate([
-//            leftLabel.widthAnchor.constraint(equalToConstant: 64)
-        ])
     }
 
     func fillText(_ text: String) {

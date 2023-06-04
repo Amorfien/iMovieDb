@@ -82,9 +82,9 @@ final class LoginViewController: UIViewController {
             switch state {
             case .login(let user):
                 print("Success Login")
-                let listViewModel = ListViewModel(networkService: NetworkService())
+                let listViewModel = ListViewModel(networkService: NetworkService(), user: user)
                 let listViewController = ListViewController(viewModel: listViewModel)
-                listViewController.title = user.login
+//                listViewController.title = user.login
                 navigationController?.setViewControllers([listViewController], animated: true)
             case .initial:
                 print("Hello")
@@ -106,8 +106,7 @@ final class LoginViewController: UIViewController {
     }
 
     private func setupView() {
-        lastUser = UserSettings.lastUser
-        loginTextField.text = lastUser
+        loginTextField.text = UserSettings.lastUser?.login
         view.backgroundColor = .systemGray4
         view.addSubview(stackView)
         view.addSubview(loginButton)

@@ -22,11 +22,16 @@ final class UserSettings {
         }
     }
 
-    static var lastUser: String {
+
+    static var lastUser: User? {
         get {
-            UserDefaults.standard.string(forKey: SettingsKeys.lastUser.rawValue) ?? ""
+            if let data = UserDefaults.standard.object(forKey: SettingsKeys.lastUser.rawValue) as? Data,
+               let user = try? JSONDecoder().decode(User.self, from: data) {
+                return user
+            }
+            return nil
         } set {
-            UserDefaults.standard.set(newValue, forKey: SettingsKeys.lastUser.rawValue)
+            UserDefaults.standard.set(try? JSONEncoder().encode(newValue), forKey: SettingsKeys.lastUser.rawValue)
         }
     }
 

@@ -17,13 +17,17 @@ final class ListViewModel: ListViewModelProtocol {
         case initial
         case loading
         case loaded(movies: [Movie])
-        case error(Error)
+        case error(ListError)
     }
 
     enum ViewInput {
         case loadButtonDidTap
         case movieDidSelect(Movie)
         case logOut
+    }
+
+    enum ListError: String, Error {
+        case decodeError
     }
 
     var onStateDidChange: ((State) -> Void)?
@@ -35,9 +39,11 @@ final class ListViewModel: ListViewModelProtocol {
     }
 
     private let networkService: NetworkServiceProtocol
+    private let user: User?
 
-    init(networkService: NetworkServiceProtocol) {
+    init(networkService: NetworkServiceProtocol, user: User?) {
         self.networkService = networkService
+        self.user = user
     }
 
     func updateState(viewInput: ViewInput) {
@@ -45,10 +51,10 @@ final class ListViewModel: ListViewModelProtocol {
         case .loadButtonDidTap:
             state = .loading
             // убираем повторяющиеся элементы из списка
-            let movieList = Array(Set(networkService.movieList))
+            let movieList = Array(Set(user!.movieList))
             networkService.loadMovies(movieList: movieList) { moviesData in
                 self.state = .loaded(movies: moviesData.sorted())
-                print("🌞 ", moviesData.count)
+//                print("🌞 ", moviesData.count)
             }
         case let .movieDidSelect(movie):
             print("test \(movie.title)")

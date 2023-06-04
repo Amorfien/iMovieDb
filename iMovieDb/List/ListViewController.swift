@@ -11,13 +11,7 @@ final class ListViewController: UIViewController {
 
     private let viewModel: ListViewModelProtocol
 
-//    private let loginTitle: String
-
-    private var movies: [Movie] = [] {
-        didSet {
-            print("☘️ ", movies.count)
-        }
-    }
+    private var movies: [Movie] = [] 
 
     private lazy var downloadButton: UIButton = {
         let button = UIButton()
@@ -50,7 +44,6 @@ final class ListViewController: UIViewController {
     }()
 
     init(viewModel: ListViewModelProtocol) {
-//        self.loginTitle = loginTitle
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -67,7 +60,7 @@ final class ListViewController: UIViewController {
     }
 
     private func setupNavigation() {
-        self.title = UserSettings.lastUser
+        self.title = UserSettings.lastUser?.login
         let logoutButton = UIBarButtonItem(image: UIImage(systemName: "door.right.hand.open"), style: .done, target: self, action: #selector(logout))
         navigationItem.rightBarButtonItem = logoutButton
     }

@@ -18,16 +18,16 @@ final class DetailsViewController: UIViewController {
         return scrollView
     }()
 
-    //  часть элементов создаются в глобальной области класса, остальные создаются в цикле при настройке UI
-    private let posterImageView = UIImageView()
-    private let verticalStack = UIStackView()
-    private let countryStack = DetailsStackView(type: .country, fontSize: 14, fontWeight: .regular)
-    private let timeStack = DetailsStackView(type: .runtime, fontSize: 14, fontWeight: .regular)
-    private let genreStack = DetailsStackView(type: .genre, fontSize: 14, fontWeight: .regular)
-    private let ratedStack = DetailsStackView(type: .rated, fontSize: 18, fontWeight: .bold)
-    private let directorStack = DetailsStackView(type: .director, fontSize: 14, fontWeight: .regular)
+    private let posterImageView: UIImageView = {
+        $0.layer.shadowColor = UIColor.black.cgColor
+        $0.layer.shadowOffset = CGSize(width: 5, height: 5)
+        $0.layer.shadowOpacity = 0.3
+        $0.layer.shadowRadius = 5
+        return $0
+    }(UIImageView())
 
-    private let plotLabel = UILabel(numberOfLines: 0, fontSize: 18, fontWeight: .medium)
+    private let verticalStack = UIStackView()
+    private let plotLabel = UILabel(numberOfLines: 0, textAlignment: .justified, fontSize: 18, fontWeight: .medium)
 
     init(movie: Movie) {
         self.movie = movie
@@ -40,7 +40,6 @@ final class DetailsViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.systemRed]
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.blue]
     }
 
@@ -53,7 +52,7 @@ final class DetailsViewController: UIViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-//        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black]
     }
 
     private func setupView() {
@@ -71,13 +70,6 @@ final class DetailsViewController: UIViewController {
         posterImageView.contentMode = .scaleAspectFit
         verticalStack.axis = .vertical
         verticalStack.distribution = .equalSpacing
-//        verticalStack.spacing = 8
-        verticalStack.translatesAutoresizingMaskIntoConstraints = false
-        verticalStack.addArrangedSubview(countryStack)
-        verticalStack.addArrangedSubview(timeStack)
-        verticalStack.addArrangedSubview(genreStack)
-        verticalStack.addArrangedSubview(directorStack)
-        verticalStack.addArrangedSubview(ratedStack)
 
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -103,8 +95,12 @@ final class DetailsViewController: UIViewController {
 
         for (ind, line) in DetailType.allCases.enumerated() {
             switch line {
-            case .plot, .title, .country, .runtime, .genre, .director, .rated:
+            case .title, .plot:
                 break
+            case .country, .runtime, .genre, .director, .rated:
+                let stack = DetailsStackView(type: line, fontSize: line == .rated ? 18 : 14, fontWeight: line == .rated ? .bold : .regular)
+                stack.fillText(movie[line])
+                verticalStack.addArrangedSubview(stack)
             default:
                 let stack = DetailsStackView(type: line, fontSize: 14, fontWeight: line == .boxOffice ? .bold : .regular)
                 stack.fillText(movie[line])
@@ -112,7 +108,7 @@ final class DetailsViewController: UIViewController {
                 stack.leadingAnchor.constraint(equalTo: posterImageView.leadingAnchor, constant: 2 * Resources.padding).isActive = true
                 stack.trailingAnchor.constraint(equalTo: verticalStack.trailingAnchor, constant: -2 * Resources.padding).isActive = true
                 stack.topAnchor.constraint(equalTo: plotLabel.bottomAnchor, constant: Resources.padding + CGFloat(ind) * 44).isActive = true
-                if ind == DetailType.allCases.count - 1 - 7 {
+                if ind == DetailType.allCases.count - 1 - 7 { // 7 - количество минус исключения
                     stack.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -Resources.padding).isActive = true
                 }
             }
@@ -128,12 +124,6 @@ final class DetailsViewController: UIViewController {
             self.posterImageView.image = UIImage(named: "defaultPoster")
         }
         plotLabel.text = movie.plot
-        plotLabel.textAlignment = .justified
-        countryStack.fillText(movie.country)
-        timeStack.fillText(movie.runtime)
-        genreStack.fillText(movie.genre)
-        directorStack.fillText(movie.director)
-        ratedStack.fillText(movie.rated)
     }
     
 
