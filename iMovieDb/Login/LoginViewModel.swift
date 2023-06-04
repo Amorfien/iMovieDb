@@ -16,7 +16,7 @@ protocol LoginViewModelProtocol: AnyObject {
 final class LoginViewModel: LoginViewModelProtocol {
     enum State {
         case initial
-        case login
+        case login(User)
         case error(LoginError)
     }
 
@@ -48,7 +48,7 @@ final class LoginViewModel: LoginViewModelProtocol {
                 print("Login Success 🟢")
                 UserSettings.lastUser = user.login
                 UserSettings.isLogin = true
-                self.state = .login
+                self.state = .login(user)
             } else {
                 print("Wrong Password 🛑")
                 self.state = .error(.wrongPassword)

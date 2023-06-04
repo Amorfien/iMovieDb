@@ -70,32 +70,34 @@ struct Movie: Codable {
         self.runtime = timeFormatter(runtime: runtime)
     }
 
-//    init(title: String, year: String, rated: String, released: String, runtime: String, genre: String, director: String, writer: String, actors: String, plot: String, country: String, awards: String, poster: String, posterData: Data? = nil, ratings: [Rating], metascore: String, imdbRating: String, imdbVotes: String, imdbID: String, type: String, boxOffice: String) {
-//        self.title = title
-//        self.year = year
-//        self.rated = rated
-//        self.released = released
-//        self.runtime = runtime
-//        self.genre = genre
-//        self.director = director
-//        self.writer = writer
-//        self.actors = actors
-//        self.plot = plot
-//        self.country = country
-//        self.awards = awards
-//        self.poster = poster
-//        self.posterData = posterData
-//        self.ratings = ratings
-//        self.metascore = metascore
-//        self.imdbRating = imdbRating
-//        self.imdbVotes = imdbVotes
-//        self.imdbID = imdbID
-//        self.type = type
-//        self.boxOffice = boxOffice
-//
-//        self.runtime = timeFormatter(runtime: runtime)
-//    }
+    // Временный инит для локально хранящегося фильма (чтобы не долбить запросы пока верстаю)
+    init(title: String, year: String, rated: String, released: String, runtime: String, genre: String, director: String, writer: String, actors: String, plot: String, country: String, awards: String, poster: String, posterData: Data? = nil, ratings: [Rating], metascore: String, imdbRating: String, imdbVotes: String, imdbID: String, type: String, boxOffice: String) {
+        self.title = title
+        self.year = year
+        self.rated = rated
+        self.released = released
+        self.runtime = runtime
+        self.genre = genre
+        self.director = director
+        self.writer = writer
+        self.actors = actors
+        self.plot = plot
+        self.country = country
+        self.awards = awards
+        self.poster = poster
+        self.posterData = posterData
+        self.ratings = ratings
+        self.metascore = metascore
+        self.imdbRating = imdbRating
+        self.imdbVotes = imdbVotes
+        self.imdbID = imdbID
+        self.type = type
+        self.boxOffice = boxOffice
 
+        self.runtime = timeFormatter(runtime: runtime)
+    }
+
+    // перевод минут в часы+минуты
     private func timeFormatter(runtime: String) -> String {
 
         guard let minutesStr = runtime.components(separatedBy: " min").first else { return "" }
@@ -109,8 +111,58 @@ struct Movie: Codable {
 
     }
 
+    // сабскрипт для автоматического заполнения информации в DetailViewController
+    subscript(_ property: DetailType) -> String {
+        switch property {
+
+        case .title:
+            return self.title
+        case .year:
+            return self.year
+        case .rated:
+            return self.title
+        case .released:
+            return self.released
+        case .runtime:
+            return self.runtime
+        case .genre:
+            return self.genre
+        case .director:
+            return self.director
+        case .writer:
+            return self.writer
+        case .actors:
+            return self.actors
+        case .plot:
+            return self.plot
+        case .country:
+            return self.country
+        case .awards:
+            return self.awards
+        case .metascore:
+            return self.metascore
+        case .imdbRating:
+            return self.imdbRating
+        case .imdbVotes:
+            return self.imdbVotes
+        case .type:
+            return self.type
+        case .boxOffice:
+            return self.boxOffice
+        }
+    }
 
 
+
+}
+
+extension Movie: Comparable {
+    static func < (lhs: Movie, rhs: Movie) -> Bool {
+        lhs.title < rhs.title
+    }
+    static func == (lhs: Movie, rhs: Movie) -> Bool {
+        lhs.imdbID == rhs.imdbID
+    }
 }
 
 // MARK: - Rating
@@ -123,14 +175,6 @@ struct Rating: Codable {
     }
 }
 
-extension Movie: Comparable {
-    static func < (lhs: Movie, rhs: Movie) -> Bool {
-        lhs.title < rhs.title
-    }
-    static func == (lhs: Movie, rhs: Movie) -> Bool {
-        lhs.imdbID == rhs.imdbID
-    }
-}
 
-//let localMovie = Movie(title: "Guardians of the Galaxy Vol. 2", year: "2017", rated: "PG-13", released: "05 May 2017", runtime: "136 min", genre: "Action, Adventure, Comedy", director: "James Gunn", writer: "James Gunn, Dan Abnett, Andy Lanning", actors: "Chris Pratt, Zoe Saldana, Dave Bautista", plot: "The Guardians struggle to keep together as a team while dealing with their personal family issues, notably Star-Lord's encounter with his father, the ambitious celestial being Ego.", country: "United States", awards: "Nominated for 1 Oscar. 15 wins & 60 nominations total", poster: "https://m.media-amazon.com/images/M/MV5BNjM0NTc0NzItM2FlYS00YzEwLWE0YmUtNTA2ZWIzODc2OTgxXkEyXkFqcGdeQXVyNTgwNzIyNzg@._V1_SX300.jpg", ratings: [Rating(source: "Internet Movie Database", value: "7.6/10"), Rating(source: "Rotten Tomatoes", value: "85%"), Rating(source: "Metacritic", value: "67/100")], metascore: "67", imdbRating: "7.6", imdbVotes: "712,189", imdbID: "tt3896198", type: "movie", boxOffice: "$389,813,101", response: "True")
+let localMovie = Movie(title: "Guardians of the Galaxy Vol. 2", year: "2017", rated: "PG-13", released: "05 May 2017", runtime: "136 min", genre: "Action, Adventure, Comedy", director: "James Gunn", writer: "James Gunn, Dan Abnett, Andy Lanning", actors: "Chris Pratt, Zoe Saldana, Dave Bautista", plot: "The Guardians struggle to keep together as a team while dealing with their personal family issues, notably Star-Lord's encounter with his father, the ambitious celestial being Ego.", country: "United States", awards: "Nominated for 1 Oscar. 15 wins & 60 nominations total", poster: "https://m.media-amazon.com/images/M/MV5BNjM0NTc0NzItM2FlYS00YzEwLWE0YmUtNTA2ZWIzODc2OTgxXkEyXkFqcGdeQXVyNTgwNzIyNzg@._V1_SX300.jpg", ratings: [Rating(source: "Internet Movie Database", value: "7.6/10"), Rating(source: "Rotten Tomatoes", value: "85%"), Rating(source: "Metacritic", value: "67/100")], metascore: "67", imdbRating: "7.6", imdbVotes: "712,189", imdbID: "tt3896198", type: "movie", boxOffice: "$389,813,101")
 

@@ -19,18 +19,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = UIWindow(windowScene: windowScene)
         self.window?.overrideUserInterfaceStyle = .light //отключение возможности тёмной темы
 
-        if UserSettings.isLogin {
-            let listViewModel = ListViewModel(networkService: NetworkService())
-            let listViewController = ListViewController(viewModel: listViewModel)
-            self.window?.rootViewController = UINavigationController(rootViewController: listViewController)
-        } else {
-            let loginViewModel = LoginViewModel(userChecker: UserChecker())
-            let loginViewController = LoginViewController(viewModel: loginViewModel)
-            self.window?.rootViewController = UINavigationController(rootViewController: loginViewController)
-        }
-//        let detailsViewController = DetailsViewController()
-//        detailsViewController.fillData(title: localMovie.title, country: localMovie.country, time: localMovie.runtime, genre: localMovie.genre, description: localMovie.plot, poster: nil, rating: "", rated: localMovie.rated, director: localMovie.director)
-//        self.window?.rootViewController = UINavigationController(rootViewController: detailsViewController)
+//        if UserSettings.isLogin {
+//            let listViewModel = ListViewModel(networkService: NetworkService())
+//            let listViewController = ListViewController(viewModel: listViewModel)
+//            self.window?.rootViewController = UINavigationController(rootViewController: listViewController)
+//        } else {
+//            let loginViewModel = LoginViewModel(userChecker: UserChecker())
+//            let loginViewController = LoginViewController(viewModel: loginViewModel)
+//            self.window?.rootViewController = UINavigationController(rootViewController: loginViewController)
+//        }
+
+        let detailsViewController = DetailsViewController(movie: localMovie)
+        self.window?.rootViewController = UINavigationController(rootViewController: detailsViewController)
 
         self.window?.makeKeyAndVisible()
 

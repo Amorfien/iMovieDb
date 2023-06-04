@@ -67,7 +67,7 @@ final class ListViewController: UIViewController {
     }
 
     private func setupNavigation() {
-//        self.title = loginTitle
+        self.title = UserSettings.lastUser
         let logoutButton = UIBarButtonItem(image: UIImage(systemName: "door.right.hand.open"), style: .done, target: self, action: #selector(logout))
         navigationItem.rightBarButtonItem = logoutButton
     }
@@ -82,7 +82,7 @@ final class ListViewController: UIViewController {
             downloadButton.widthAnchor.constraint(equalToConstant: 200),
             
             activityIndicator.centerXAnchor.constraint(equalTo: movieTableView.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: movieTableView.topAnchor, constant: 100),
+            activityIndicator.centerYAnchor.constraint(equalTo: movieTableView.topAnchor, constant: 120),
         ])
     }
 
@@ -155,8 +155,7 @@ extension ListViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let detailsViewController = DetailsViewController()
-        detailsViewController.fillData(with: movies[indexPath.row])
+        let detailsViewController = DetailsViewController(movie: movies[indexPath.row])
         navigationController?.pushViewController(detailsViewController, animated: true)
     }
 

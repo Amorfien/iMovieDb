@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		184E7C5E2A2CA8700041496E /* UILabel + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184E7C5D2A2CA8700041496E /* UILabel + Extensions.swift */; };
 		1856F3F22A2632AD00150930 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1856F3F12A2632AD00150930 /* Movie.swift */; };
 		1856F3F52A2633A400150930 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1856F3F42A2633A400150930 /* NetworkService.swift */; };
 		1856F3F82A26366E00150930 /* UserChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1856F3F72A26366E00150930 /* UserChecker.swift */; };
@@ -29,6 +30,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		184E7C5D2A2CA8700041496E /* UILabel + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel + Extensions.swift"; sourceTree = "<group>"; };
 		1856F3F12A2632AD00150930 /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		1856F3F42A2633A400150930 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		1856F3F62A2635DB00150930 /* specification.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = specification.md; sourceTree = "<group>"; };
@@ -64,6 +66,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		184E7C5C2A2CA8310041496E /* CustomUI */ = {
+			isa = PBXGroup;
+			children = (
+				1878E21E2A254DFD00A99C0A /* LoginButton.swift */,
+				1878E21C2A2547B700A99C0A /* TextFieldWithPadding.swift */,
+				186007E32A2A90E8004BEA97 /* DetailsStackView.swift */,
+				184E7C5D2A2CA8700041496E /* UILabel + Extensions.swift */,
+			);
+			path = CustomUI;
+			sourceTree = "<group>";
+		};
 		1856F3F02A26329C00150930 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -87,7 +100,6 @@
 			isa = PBXGroup;
 			children = (
 				1856F3FA2A263FAD00150930 /* DetailsViewController.swift */,
-				186007E32A2A90E8004BEA97 /* DetailsStackView.swift */,
 			);
 			path = Details;
 			sourceTree = "<group>";
@@ -118,6 +130,7 @@
 				1878E21B2A25473C00A99C0A /* Login */,
 				1878E2202A2552A200A99C0A /* List */,
 				1856F3F92A263F9300150930 /* Details */,
+				184E7C5C2A2CA8310041496E /* CustomUI */,
 				1856F3F62A2635DB00150930 /* specification.md */,
 			);
 			path = iMovieDb;
@@ -148,8 +161,6 @@
 			children = (
 				187E67482A275E5700CEADB8 /* LoginViewModel.swift */,
 				1878E2092A25414400A99C0A /* LoginViewController.swift */,
-				1878E21E2A254DFD00A99C0A /* LoginButton.swift */,
-				1878E21C2A2547B700A99C0A /* TextFieldWithPadding.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -248,6 +259,7 @@
 				1856F3F52A2633A400150930 /* NetworkService.swift in Sources */,
 				1856F3F82A26366E00150930 /* UserChecker.swift in Sources */,
 				1878E21D2A2547B700A99C0A /* TextFieldWithPadding.swift in Sources */,
+				184E7C5E2A2CA8700041496E /* UILabel + Extensions.swift in Sources */,
 				1878E2062A25414400A99C0A /* AppDelegate.swift in Sources */,
 				1856F3F22A2632AD00150930 /* Movie.swift in Sources */,
 				1878E2082A25414400A99C0A /* SceneDelegate.swift in Sources */,

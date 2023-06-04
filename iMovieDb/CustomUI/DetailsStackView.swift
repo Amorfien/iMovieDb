@@ -7,24 +7,37 @@
 
 import UIKit
 
+enum DetailType: String, CaseIterable {
+//    case .plot, .title, .country, .runtime, .genre, .director, .rated:
+    case year
+    case released
+    case writer
+    case actors
+    case awards
+    case metascore
+    case imdbRating, imdbVotes
+    case type
+    case boxOffice
+    case title
+    case country
+    case plot
+    case runtime
+    case genre
+    case director
+    case rated
+}
 final class DetailsStackView: UIStackView {
 
-    enum DetailType: String {
-        case country
-        case plot
-        case year
-        case time
-        case director
-        case actor
-        case genre
-        case rated
-    }
 
     private let leftLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 1
+//        label.adjustsFontSizeToFitWidth = true
+//        label.minimumScaleFactor = 0.7
+        label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+
 //        label.textColor = .red
-//        label.font = UIFont.systemFont(ofSize: 14, weight: .light)
+        label.font = UIFont.systemFont(ofSize: 14, weight: .light)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -32,20 +45,21 @@ final class DetailsStackView: UIStackView {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .right
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 //        label.textColor = .systemGray
 //        label.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
 //        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
-    init(type: DetailType, fontSize: CGFloat) {
+    init(type: DetailType, fontSize: CGFloat, fontWeight: UIFont.Weight) {
         super.init(frame: .zero)
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.leftLabel.font = .systemFont(ofSize: 14, weight: .light)
-        self.rightLabel.font = .systemFont(ofSize: fontSize, weight: .regular)
+        self.rightLabel.font = .systemFont(ofSize: fontSize, weight: fontWeight)
         self.leftLabel.text = type.rawValue.capitalized + ":"
 
 //        distribution = .fillEqually
+//        distribution = .fillProportionally
 
         
 //        spacing = 8
@@ -61,7 +75,7 @@ final class DetailsStackView: UIStackView {
         self.addArrangedSubview(rightLabel)
 
         NSLayoutConstraint.activate([
-            leftLabel.widthAnchor.constraint(equalToConstant: 56)
+//            leftLabel.widthAnchor.constraint(equalToConstant: 64)
         ])
     }
 

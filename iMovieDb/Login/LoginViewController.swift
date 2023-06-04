@@ -80,10 +80,11 @@ final class LoginViewController: UIViewController {
                 return
             }
             switch state {
-            case .login:
+            case .login(let user):
                 print("Success Login")
                 let listViewModel = ListViewModel(networkService: NetworkService())
                 let listViewController = ListViewController(viewModel: listViewModel)
+                listViewController.title = user.login
                 navigationController?.setViewControllers([listViewController], animated: true)
             case .initial:
                 print("Hello")
