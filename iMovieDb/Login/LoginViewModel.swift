@@ -12,6 +12,9 @@ protocol LoginViewModelProtocol: AnyObject {
     func updateState(viewInput: LoginViewModel.ViewInput)
 }
 
+enum LoginError: String, Error {
+    case wrongPassword = "Wrong Password"
+}
 
 final class LoginViewModel: LoginViewModelProtocol {
     enum State {
@@ -22,9 +25,6 @@ final class LoginViewModel: LoginViewModelProtocol {
 
     enum ViewInput {
         case loginButtonDidTap(user: User)
-    }
-    enum LoginError: String, Error {
-        case wrongPassword = "Wrong Password"
     }
 
     var onStateDidChange: ((State) -> Void)?

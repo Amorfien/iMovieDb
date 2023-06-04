@@ -87,19 +87,23 @@ final class ListViewController: UIViewController {
             switch state {
             case .initial:
                 updateTableViewVisibility(isHidden: true)
+                updateLoadingAnimation(isLoading: false)
             case .loading:
                 updateTableViewVisibility(isHidden: true)
                 updateLoadingAnimation(isLoading: true)
-            case let .loaded(movies):
+            case .loaded(let movies):
                 DispatchQueue.main.async {
                     self.movies = movies
                     self.updateLoadingAnimation(isLoading: false)
                     self.updateTableViewVisibility(isHidden: false)
                     self.reload()
                 }
-            case .error:
-                // Here we can show alert with error text
-                ()
+            case .error(let error):
+                DispatchQueue.main.async {
+                    self.alerting(title: "Error", message: error.rawValue, vc: self) { [weak self] _ in
+                        self?.viewModel.updateState(viewInput: .alertClose)
+                    }
+                }
             }
         }
     }

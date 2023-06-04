@@ -9,7 +9,7 @@ import Foundation
 
 protocol NetworkServiceProtocol: AnyObject {
 //    var movieList: [String] { get }
-    func loadMovies(movieList: [String], completion: @escaping ([Movie]) -> Void)
+    func loadMovies(movieList: [String], completion: @escaping (Result<[Movie], ListError>) -> Void)
 }
 
 final class NetworkService: NetworkServiceProtocol {
@@ -23,15 +23,18 @@ final class NetworkService: NetworkServiceProtocol {
 
 
     // MARK: - URL session
-    private func movieSession(movieId: String, completion: @escaping (Result<Data, Error>) -> ()) {
+    private func movieSession(movieId: String, completion: @escaping (Result<Data, ListError>) -> Void) {
         let data = Data(coded)
         let apiKey = String(data: data, encoding: .utf8) ?? ""
         let urlStr = tunnel + server + movieId + apiKey
-        guard let apiURL = URL(string: urlStr) else { return }
+        guard let apiURL = URL(string: urlStr) else {
+            completion(.failure(.badURL))
+            return
+        }
         URLSession.shared.dataTask(with: apiURL) { data, response, error in
             guard let data else {
-                if let error {
-                    completion(.failure(error))
+                if error != nil {
+                    completion(.failure(.noData))
                 }
                 return
             }
@@ -56,7 +59,7 @@ final class NetworkService: NetworkServiceProtocol {
 
     let group = DispatchGroup()
 
-    func loadMovies(movieList: [String], completion: @escaping ([Movie]) -> Void) {
+    func loadMovies(movieList: [String], completion: @escaping (Result<[Movie], ListError>) -> Void) {
 
         var dataList: [Movie] = []
 
@@ -77,8 +80,10 @@ final class NetworkService: NetworkServiceProtocol {
 
                     } catch {
                         print("❗️ Decode Error")
+                        completion(.failure(.decodeError))
                     }
                 case .failure(let error): print("‼️ Request Error ", error)
+                    completion(.failure(error))
                 }
             }
 
@@ -86,7 +91,7 @@ final class NetworkService: NetworkServiceProtocol {
 
         group.notify(queue: .main, work: DispatchWorkItem(block: {
             sleep(1)
-            completion(dataList)
+            completion(.success(dataList))
 //            print("📣 Handled films ", dataList.count)
         }))
 

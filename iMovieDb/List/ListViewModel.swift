@@ -12,6 +12,13 @@ protocol ListViewModelProtocol: AnyObject {
     func updateState(viewInput: ListViewModel.ViewInput)
 }
 
+enum ListError: String, Error {
+    case badURL
+    case noData
+    case decodeError
+    case requestError
+}
+
 final class ListViewModel: ListViewModelProtocol {
     enum State {
         case initial
@@ -24,11 +31,9 @@ final class ListViewModel: ListViewModelProtocol {
         case loadButtonDidTap
         case movieDidSelect(Movie)
         case logOut
+        case alertClose
     }
 
-    enum ListError: String, Error {
-        case decodeError
-    }
 
     var onStateDidChange: ((State) -> Void)?
 
@@ -52,8 +57,14 @@ final class ListViewModel: ListViewModelProtocol {
             state = .loading
             // убираем повторяющиеся элементы из списка
             let movieList = Array(Set(user!.movieList))
-            networkService.loadMovies(movieList: movieList) { moviesData in
-                self.state = .loaded(movies: moviesData.sorted())
+            networkService.loadMovies(movieList: movieList) { result in
+                switch result {
+
+                case .success(let moviesData):
+                    self.state = .loaded(movies: moviesData.sorted())
+                case .failure(let error):
+                    self.state = .error(error)
+                }
 //                print("🌞 ", moviesData.count)
             }
         case let .movieDidSelect(movie):
@@ -62,6 +73,8 @@ final class ListViewModel: ListViewModelProtocol {
         case .logOut:
             print("logoutout")
             UserSettings.isLogin = false
+        case .alertClose:
+            state = .initial
         }
     }
 }

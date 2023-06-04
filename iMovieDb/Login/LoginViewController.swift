@@ -89,9 +89,8 @@ final class LoginViewController: UIViewController {
             case .initial:
                 print("Hello")
             case .error(let error):
-                let alert = UIAlertController(title: "Error", message: error.rawValue, preferredStyle: .alert)
-                alert.addAction(.init(title: "Cancel", style: .cancel))
-                self.present(alert, animated: true)
+                alerting(title: "Error", message: error.rawValue, vc: self, action: nil)
+
             }
         }
     }

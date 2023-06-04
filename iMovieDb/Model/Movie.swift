@@ -68,6 +68,9 @@ struct Movie: Codable {
         self.imdbVotes = try container.decode(String.self, forKey: .imdbVotes)
         self.imdbID = try container.decode(String.self, forKey: .imdbID)
         self.type = try container.decode(String.self, forKey: .type)
+
+//        self.boxOffice = try container.decode(String.self, forKey: .boxOffice)
+//        self.totalSeasons = try container.decode(String.self, forKey: .totalSeasons)
         self.boxOffice = try container.decodeIfPresent(String.self, forKey: .boxOffice)
         self.totalSeasons = try container.decodeIfPresent(String.self, forKey: .totalSeasons)
 
