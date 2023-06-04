@@ -97,10 +97,12 @@ final class DetailsViewController: UIViewController {
             switch line {
             case .title, .plot:
                 break
-            case .country, .runtime, .genre, .director, .rated:
-                let stack = DetailsStackView(type: line, fontSize: line == .rated ? 18 : 14, fontWeight: line == .rated ? .bold : .regular)
-                stack.fillText(movie[line])
-                verticalStack.addArrangedSubview(stack)
+            case .country, .runtime, .genre, .director, .rated, .seasons:
+                if movie[line] != "--" {
+                    let stack = DetailsStackView(type: line, fontSize: line == .rated ? 18 : 14, fontWeight: line == .rated ? .bold : .regular)
+                    stack.fillText(movie[line])
+                    verticalStack.addArrangedSubview(stack)
+                }
             default:
                 let stack = DetailsStackView(type: line, fontSize: 14, fontWeight: line == .boxOffice ? .bold : .regular)
                 stack.fillText(movie[line])
@@ -108,7 +110,7 @@ final class DetailsViewController: UIViewController {
                 stack.leadingAnchor.constraint(equalTo: posterImageView.leadingAnchor, constant: 2 * Resources.padding).isActive = true
                 stack.trailingAnchor.constraint(equalTo: verticalStack.trailingAnchor, constant: -2 * Resources.padding).isActive = true
                 stack.topAnchor.constraint(equalTo: plotLabel.bottomAnchor, constant: Resources.padding + CGFloat(ind) * 44).isActive = true
-                if ind == DetailType.allCases.count - 1 - 7 { // 7 - количество минус исключения
+                if ind == DetailType.allCases.count - 1 - 8 { // 8 - количество минус исключения
                     stack.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -Resources.padding).isActive = true
                 }
             }

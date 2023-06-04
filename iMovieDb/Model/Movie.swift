@@ -149,15 +149,15 @@ struct Movie: Codable {
             return self.awards
         case .metascore:
             return self.metascore
-        case .imdbRating:
+        case .rating:
             return self.imdbRating
-        case .imdbVotes:
+        case .votes:
             return self.imdbVotes
         case .type:
             return self.type
         case .boxOffice:
             return self.boxOffice ?? "--"
-        case .totalSeasons:
+        case .seasons:
             return self.totalSeasons ?? "--"
         }
     }

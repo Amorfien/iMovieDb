@@ -14,17 +14,17 @@ enum DetailType: String, CaseIterable {
     case actors
     case awards
     case metascore
-    case imdbRating
-    case imdbVotes
+    case rating
+    case votes
     case type
     case boxOffice
-    case totalSeasons
     case title
     case country
     case plot
     case runtime
     case genre
     case director
+    case seasons
     case rated
 }
 final class DetailsStackView: UIStackView {
