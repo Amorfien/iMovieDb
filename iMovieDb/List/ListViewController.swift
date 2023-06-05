@@ -50,7 +50,7 @@ final class ListViewController: UIViewController {
         let segmentedControl = UISegmentedControl(items: ["🔤", "📅", "⭐️"])
         segmentedControl.selectedSegmentIndex = 0
         segmentedControl.selectedSegmentTintColor = .systemYellow
-        segmentedControl.widthAnchor.constraint(equalToConstant: 250).isActive = true
+        segmentedControl.widthAnchor.constraint(equalToConstant: 200).isActive = true
         segmentedControl.addTarget(self, action: #selector(sortButtonDidTap), for: .valueChanged)
         segmentedControl.isEnabled = false
         return segmentedControl
@@ -73,8 +73,8 @@ final class ListViewController: UIViewController {
     }
 
     private func setupNavigation() {
-//        navigationController?.navigationBar.prefersLargeTitles = true
-        self.title = UserSettings.lastUser?.login
+        navigationController?.navigationBar.prefersLargeTitles = true
+        self.title = "Hello, \(viewModel.user?.login ?? "NoName")!"
         let logoutButton = UIBarButtonItem(image: UIImage(systemName: "door.right.hand.open"), style: .done, target: self, action: #selector(logout))
         navigationItem.rightBarButtonItem = logoutButton
 
@@ -112,7 +112,7 @@ final class ListViewController: UIViewController {
                     self.movies = movies
                     self.updateLoadingAnimation(isLoading: false)
                     self.updateTableViewVisibility(isHidden: false)
-                    self.reload()
+//                    self.reload()
                 }
             case .error(let error):
                 DispatchQueue.main.async {
@@ -133,6 +133,7 @@ final class ListViewController: UIViewController {
         sortSegment.isEnabled = !isHidden
         activityIndicator.isHidden = !isHidden
         downloadButton.isHidden = !isHidden
+        navigationController?.navigationBar.prefersLargeTitles = isHidden
     }
 
     private func updateLoadingAnimation(isLoading: Bool) {
@@ -140,7 +141,6 @@ final class ListViewController: UIViewController {
     }
 
     @objc private func downloadDidTap() {
-//        activityIndicator.startAnimating()
         viewModel.updateState(viewInput: .loadButtonDidTap)
     }
 
@@ -179,6 +179,9 @@ extension ListViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // обращение к вьюмодели
+//        viewModel.updateState(viewInput: .movieDidSelect(movies[indexPath.row]))
+        
         tableView.deselectRow(at: indexPath, animated: true)
         let detailsViewController = DetailsViewController(movie: movies[indexPath.row])
         navigationController?.pushViewController(detailsViewController, animated: true)

@@ -9,8 +9,6 @@ import UIKit
 
 final class LoginViewController: UIViewController {
 
-    private var lastUser: String = ""
-
     private var viewModel: LoginViewModelProtocol
 
     private let stackView: UIStackView = {
@@ -72,7 +70,6 @@ final class LoginViewController: UIViewController {
     }
 
     func bindViewModel() {
-        print("--------")
         viewModel.onStateDidChange = { [weak self] state in
             guard let self else {
                 print("???????\n")
@@ -83,13 +80,15 @@ final class LoginViewController: UIViewController {
                 print("Success Login")
                 let listViewModel = ListViewModel(networkService: NetworkService(), user: user)
                 let listViewController = ListViewController(viewModel: listViewModel)
-//                listViewController.title = user.login
                 navigationController?.setViewControllers([listViewController], animated: true)
             case .initial:
-                print("Hello")
+                passwordTextField.text = ""
+            case .lastUser(let login):
+                loginTextField.text = login
             case .error(let error):
-                alerting(title: "Error", message: error.rawValue, vc: self, action: nil)
-
+                alerting(title: "Error", message: error.rawValue, vc: self) { [weak self] _ in
+                    self?.viewModel.updateState(viewInput: .errorCanceling)
+                }
             }
         }
     }
@@ -101,10 +100,11 @@ final class LoginViewController: UIViewController {
         setupView()
         setupGestures()
         bindViewModel()
+        viewModel.checkLastUser()
     }
 
     private func setupView() {
-        loginTextField.text = UserSettings.lastUser?.login
+//        loginTextField.text = UserSettings.lastUser?.login
         view.backgroundColor = .systemGray4
         view.addSubview(stackView)
         view.addSubview(loginButton)

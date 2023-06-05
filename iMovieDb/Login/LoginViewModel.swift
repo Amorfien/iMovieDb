@@ -10,6 +10,7 @@ import Foundation
 protocol LoginViewModelProtocol: AnyObject {
     var onStateDidChange: ((LoginViewModel.State) -> Void)? { get set }
     func updateState(viewInput: LoginViewModel.ViewInput)
+    func checkLastUser()
 }
 
 enum LoginError: String, Error {
@@ -17,14 +18,17 @@ enum LoginError: String, Error {
 }
 
 final class LoginViewModel: LoginViewModelProtocol {
+
     enum State {
         case initial
+        case lastUser(String)
         case login(User)
         case error(LoginError)
     }
 
     enum ViewInput {
         case loginButtonDidTap(user: User)
+        case errorCanceling
     }
 
     var onStateDidChange: ((State) -> Void)?
@@ -53,6 +57,16 @@ final class LoginViewModel: LoginViewModelProtocol {
                 print("Wrong Password 🛑")
                 self.state = .error(.wrongPassword)
             }
+        case .errorCanceling:
+            self.state = .initial
         }
     }
+
+    // сделал отдельный метод, т.к. не могу поместить проверку в init, не срабатывает didSet
+    func checkLastUser() {
+        if let login = UserSettings.lastUser?.login {
+            self.state = .lastUser(login)
+        }
+    }
+
 }

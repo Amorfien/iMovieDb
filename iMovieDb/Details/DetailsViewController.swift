@@ -57,9 +57,9 @@ final class DetailsViewController: UIViewController {
 
     private func setupView() {
         self.title = movie.title
-        view.backgroundColor = #colorLiteral(red: 0.7613402009, green: 0.9620329738, blue: 0.7515649199, alpha: 0.6984168046)//.systemGray4
+        view.backgroundColor = #colorLiteral(red: 0.7835845947, green: 0.7742826343, blue: 1, alpha: 1)
         view.addSubview(scrollView)
-        scrollView.backgroundColor = #colorLiteral(red: 0.7613402009, green: 0.9620329738, blue: 0.7515649199, alpha: 0.6984168046)
+        scrollView.backgroundColor = #colorLiteral(red: 0.7835845947, green: 0.7742826343, blue: 1, alpha: 1)
 
         let views: [UIView] = [posterImageView, verticalStack, plotLabel]
         views.forEach { view in

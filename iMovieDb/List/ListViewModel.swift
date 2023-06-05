@@ -9,6 +9,7 @@ import Foundation
 
 protocol ListViewModelProtocol: AnyObject {
     var onStateDidChange: ((ListViewModel.State) -> Void)? { get set }
+    var user: User? { get }
     func updateState(viewInput: ListViewModel.ViewInput)
 }
 
@@ -44,7 +45,7 @@ final class ListViewModel: ListViewModelProtocol {
     }
 
     private let networkService: NetworkServiceProtocol
-    private let user: User?
+    var user: User?
 
     init(networkService: NetworkServiceProtocol, user: User?) {
         self.networkService = networkService
@@ -69,7 +70,7 @@ final class ListViewModel: ListViewModelProtocol {
             }
         case let .movieDidSelect(movie):
             print("test \(movie.title)")
-
+//            coordinator?
         case .logOut:
             print("logoutout")
             UserSettings.isLogin = false
