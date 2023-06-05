@@ -11,7 +11,11 @@ final class ListViewController: UIViewController {
 
     private let viewModel: ListViewModelProtocol
 
-    private var movies: [Movie] = [] 
+    private var movies: [Movie] = [] {
+        didSet {
+            reload()
+        }
+    }
 
     private lazy var downloadButton: UIButton = {
         let button = UIButton()
@@ -39,8 +43,17 @@ final class ListViewController: UIViewController {
 
         tableView.delegate = self
         tableView.dataSource = self
-//        tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
+    }()
+
+    private lazy var sortSegment: UISegmentedControl = {
+        let segmentedControl = UISegmentedControl(items: ["🔤", "📅", "⭐️"])
+        segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.selectedSegmentTintColor = .systemYellow
+        segmentedControl.widthAnchor.constraint(equalToConstant: 250).isActive = true
+        segmentedControl.addTarget(self, action: #selector(sortButtonDidTap), for: .valueChanged)
+        segmentedControl.isEnabled = false
+        return segmentedControl
     }()
 
     init(viewModel: ListViewModelProtocol) {
@@ -60,9 +73,12 @@ final class ListViewController: UIViewController {
     }
 
     private func setupNavigation() {
+//        navigationController?.navigationBar.prefersLargeTitles = true
         self.title = UserSettings.lastUser?.login
         let logoutButton = UIBarButtonItem(image: UIImage(systemName: "door.right.hand.open"), style: .done, target: self, action: #selector(logout))
         navigationItem.rightBarButtonItem = logoutButton
+
+        navigationItem.titleView = sortSegment
     }
     private func setupView() {
         self.view = movieTableView
@@ -114,6 +130,7 @@ final class ListViewController: UIViewController {
 
     private func updateTableViewVisibility(isHidden: Bool) {
 //        movieTableView.isHidden = isHidden
+        sortSegment.isEnabled = !isHidden
         activityIndicator.isHidden = !isHidden
         downloadButton.isHidden = !isHidden
     }
@@ -131,6 +148,17 @@ final class ListViewController: UIViewController {
         viewModel.updateState(viewInput: .logOut)
         let loginViewController = LoginViewController(viewModel: LoginViewModel(userChecker: UserChecker()))
         navigationController?.setViewControllers([loginViewController], animated: true)
+    }
+
+    @objc private func sortButtonDidTap() {
+        switch sortSegment.selectedSegmentIndex {
+        case 0:
+            self.movies.sort()
+        case 1:
+            self.movies.sort { $0.year > $1.year }
+        default:
+            self.movies.sort { $0.imdbRating > $1.imdbRating }
+        }
     }
 
 }

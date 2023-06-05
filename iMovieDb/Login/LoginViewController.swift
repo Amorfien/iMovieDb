@@ -56,8 +56,7 @@ final class LoginViewController: UIViewController {
     private lazy var loginButton: LoginButton = {
         let button = LoginButton()
         button.setTitle("Login", for: .normal)
-        // TODO: - disable button
-//        button.isEnabled = false
+        button.isEnabled = false
         button.addTarget(self, action: #selector(loginDidTap), for: .touchUpInside)
         return button
     }()
