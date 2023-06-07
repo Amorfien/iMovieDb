@@ -19,12 +19,13 @@ final class DetailsViewController: UIViewController {
     }()
 
     private let posterImageView: UIImageView = {
-        $0.layer.shadowColor = UIColor.black.cgColor
-        $0.layer.shadowOffset = CGSize(width: 5, height: 5)
-        $0.layer.shadowOpacity = 0.3
-        $0.layer.shadowRadius = 5
-        return $0
-    }(UIImageView())
+        let imageView = UIImageView()
+        imageView.layer.shadowColor = UIColor.black.cgColor
+        imageView.layer.shadowOffset = CGSize(width: 5, height: 5)
+        imageView.layer.shadowOpacity = 0.3
+        imageView.layer.shadowRadius = 5
+        return imageView
+    }()
 
     private let verticalStack = UIStackView()
     private let plotLabel = UILabel(numberOfLines: 0, textAlignment: .justified, fontSize: 18, fontWeight: .medium)
@@ -57,9 +58,9 @@ final class DetailsViewController: UIViewController {
 
     private func setupView() {
         self.title = movie.title
-        view.backgroundColor = #colorLiteral(red: 0.7835845947, green: 0.7742826343, blue: 1, alpha: 1)
+        view.backgroundColor = Resources.Colors.detailsBackground
         view.addSubview(scrollView)
-        scrollView.backgroundColor = #colorLiteral(red: 0.7835845947, green: 0.7742826343, blue: 1, alpha: 1)
+        scrollView.backgroundColor = Resources.Colors.detailsBackground
 
         let views: [UIView] = [posterImageView, verticalStack, plotLabel]
         views.forEach { view in
@@ -77,19 +78,19 @@ final class DetailsViewController: UIViewController {
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
 
-            posterImageView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: Resources.padding),
-            posterImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Resources.padding),
+            posterImageView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: Resources.Sizes.padding),
+            posterImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Resources.Sizes.padding),
             posterImageView.trailingAnchor.constraint(equalTo: view.centerXAnchor),
             posterImageView.heightAnchor.constraint(equalTo: posterImageView.widthAnchor, multiplier: 1.48),
 
-            verticalStack.topAnchor.constraint(equalTo: posterImageView.topAnchor, constant: 8),
-            verticalStack.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: Resources.padding),
-            verticalStack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Resources.padding),
-            verticalStack.bottomAnchor.constraint(equalTo: posterImageView.bottomAnchor, constant: -8),
+            verticalStack.topAnchor.constraint(equalTo: posterImageView.topAnchor, constant: Resources.Sizes.inset),
+            verticalStack.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: Resources.Sizes.padding),
+            verticalStack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Resources.Sizes.padding),
+            verticalStack.bottomAnchor.constraint(equalTo: posterImageView.bottomAnchor, constant: -Resources.Sizes.inset),
 
-            plotLabel.topAnchor.constraint(equalTo: posterImageView.bottomAnchor, constant: Resources.padding),
-            plotLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Resources.padding),
-            plotLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Resources.padding),
+            plotLabel.topAnchor.constraint(equalTo: posterImageView.bottomAnchor, constant: Resources.Sizes.padding),
+            plotLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Resources.Sizes.padding),
+            plotLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Resources.Sizes.padding),
         ])
 
 
@@ -107,11 +108,11 @@ final class DetailsViewController: UIViewController {
                 let stack = DetailsStackView(type: line, fontSize: 14, fontWeight: line == .boxOffice ? .bold : .regular)
                 stack.fillText(movie[line])
                 scrollView.addSubview(stack)
-                stack.leadingAnchor.constraint(equalTo: posterImageView.leadingAnchor, constant: 2 * Resources.padding).isActive = true
-                stack.trailingAnchor.constraint(equalTo: verticalStack.trailingAnchor, constant: -2 * Resources.padding).isActive = true
-                stack.topAnchor.constraint(equalTo: plotLabel.bottomAnchor, constant: Resources.padding + CGFloat(ind) * 44).isActive = true
+                stack.leadingAnchor.constraint(equalTo: posterImageView.leadingAnchor, constant: 2 * Resources.Sizes.padding).isActive = true
+                stack.trailingAnchor.constraint(equalTo: verticalStack.trailingAnchor, constant: -2 * Resources.Sizes.padding).isActive = true
+                stack.topAnchor.constraint(equalTo: plotLabel.bottomAnchor, constant: Resources.Sizes.padding + CGFloat(ind) * 44).isActive = true
                 if ind == DetailType.allCases.count - 1 - 8 { // 8 - количество минус исключения
-                    stack.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -Resources.padding).isActive = true
+                    stack.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -Resources.Sizes.padding).isActive = true
                 }
             }
         }

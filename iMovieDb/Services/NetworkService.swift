@@ -8,7 +8,6 @@
 import Foundation
 
 protocol NetworkServiceProtocol: AnyObject {
-//    var movieList: [String] { get }
     func loadMovies(movieList: [String], completion: @escaping (Result<[Movie], ListError>) -> Void)
 }
 
@@ -19,8 +18,6 @@ final class NetworkService: NetworkServiceProtocol {
 
     // obfuscation API-key
     private let coded: [UInt8] = [0x26, 0x61, 0x70, 0x69, 0x6b, 0x65, 0x79, 0x3d, 0x35, 0x65, 0x38, 0x62, 0x36, 0x62, 0x66, 0x63]
-
-
 
     // MARK: - URL session
     private func movieSession(movieId: String, completion: @escaping (Result<Data, ListError>) -> Void) {
@@ -57,10 +54,10 @@ final class NetworkService: NetworkServiceProtocol {
         task.resume()
     }
 
-    let group = DispatchGroup()
 
     func loadMovies(movieList: [String], completion: @escaping (Result<[Movie], ListError>) -> Void) {
 
+        let group = DispatchGroup()
         var dataList: [Movie] = []
 
         for movie in movieList {
@@ -74,25 +71,25 @@ final class NetworkService: NetworkServiceProtocol {
                         self.imageSession(urlString: movie.poster) { data in
                             movie.posterData = data
                             dataList.append(movie)
-//                            print(movie.title)
-                            self.group.leave()
+                            group.leave()
                         }
-
                     } catch {
                         print("❗️ Decode Error")
                         completion(.failure(.decodeError))
+                        // TODO: - ??
+                        group.leave()// нужно ли тут выходить? После failure сработает success completion. С пустым массивом или кэшем. А если не выходить, то после ошибки (например был откл WiFi) уже нельзя получить результат после её устранения
                     }
                 case .failure(let error): print("‼️ Request Error ", error)
                     completion(.failure(error))
+                    group.leave()// --//--
                 }
             }
 
         }
 
-        group.notify(queue: .main, work: DispatchWorkItem(block: {
-            sleep(1)
+        group.notify(queue: .global(), work: DispatchWorkItem(block: {
+            sleep(1) // для наглядности
             completion(.success(dataList))
-//            print("📣 Handled films ", dataList.count)
         }))
 
     }

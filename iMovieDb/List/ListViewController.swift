@@ -20,27 +20,24 @@ final class ListViewController: UIViewController {
     private lazy var downloadButton: UIButton = {
         let button = UIButton()
         button.setTitle("Download Movies", for: .normal)
-        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(.label, for: .normal)
         button.layer.borderWidth = 2
+        button.layer.borderColor = UIColor.systemBlue.cgColor
         button.layer.cornerRadius = 5
         button.addTarget(self, action: #selector(downloadDidTap), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
 
-    private let activityIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .large)
-        indicator.translatesAutoresizingMaskIntoConstraints = false
-        return indicator
-    }()
+    private let activityIndicator = UIActivityIndicatorView(style: .large)
 
     private lazy var movieTableView: UITableView = {
         let tableView = UITableView()
         tableView.register(MovieTableViewCell.self, forCellReuseIdentifier: MovieTableViewCell.cellIdentifier)
-        tableView.rowHeight = 128
-        tableView.backgroundColor = .systemGray4
+        tableView.rowHeight = Resources.Sizes.rowHeight
         tableView.showsVerticalScrollIndicator = false
-
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.isHidden = true
         tableView.delegate = self
         tableView.dataSource = self
         return tableView
@@ -48,11 +45,10 @@ final class ListViewController: UIViewController {
 
     private lazy var sortSegment: UISegmentedControl = {
         let segmentedControl = UISegmentedControl(items: ["🔤", "📅", "⭐️"])
+        segmentedControl.backgroundColor = Resources.Colors.lightRose.withAlphaComponent(0.8)
         segmentedControl.selectedSegmentIndex = 0
         segmentedControl.selectedSegmentTintColor = .systemYellow
-        segmentedControl.widthAnchor.constraint(equalToConstant: 200).isActive = true
         segmentedControl.addTarget(self, action: #selector(sortButtonDidTap), for: .valueChanged)
-        segmentedControl.isEnabled = false
         return segmentedControl
     }()
 
@@ -77,21 +73,26 @@ final class ListViewController: UIViewController {
         self.title = "Hello, \(viewModel.user?.login ?? "NoName")!"
         let logoutButton = UIBarButtonItem(image: UIImage(systemName: "door.right.hand.open"), style: .done, target: self, action: #selector(logout))
         navigationItem.rightBarButtonItem = logoutButton
-
-        navigationItem.titleView = sortSegment
     }
     private func setupView() {
-        self.view = movieTableView
-        movieTableView.addSubview(activityIndicator)
-        movieTableView.addSubview(downloadButton)
+        self.view.backgroundColor = .systemBackground
+        view.addSubview(movieTableView)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(downloadButton)
+        view.addSubview(activityIndicator)
 
         NSLayoutConstraint.activate([
-            downloadButton.centerXAnchor.constraint(equalTo: movieTableView.centerXAnchor),
-            downloadButton.topAnchor.constraint(equalTo: movieTableView.topAnchor, constant: 20),
-            downloadButton.widthAnchor.constraint(equalToConstant: 200),
+            movieTableView.topAnchor.constraint(equalTo: view.topAnchor),
+            movieTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            movieTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            movieTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            downloadButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            downloadButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 2 * Resources.Sizes.padding),
+            downloadButton.widthAnchor.constraint(equalToConstant: Resources.Sizes.buttonWidth),
             
-            activityIndicator.centerXAnchor.constraint(equalTo: movieTableView.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: movieTableView.topAnchor, constant: 120),
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: downloadButton.bottomAnchor, constant: Resources.Sizes.spacer),
         ])
     }
 
@@ -112,7 +113,7 @@ final class ListViewController: UIViewController {
                     self.movies = movies
                     self.updateLoadingAnimation(isLoading: false)
                     self.updateTableViewVisibility(isHidden: false)
-//                    self.reload()
+                    self.title = "My  🎬  List"
                 }
             case .error(let error):
                 DispatchQueue.main.async {
@@ -129,8 +130,7 @@ final class ListViewController: UIViewController {
     }
 
     private func updateTableViewVisibility(isHidden: Bool) {
-//        movieTableView.isHidden = isHidden
-        sortSegment.isEnabled = !isHidden
+        movieTableView.isHidden = isHidden
         activityIndicator.isHidden = !isHidden
         downloadButton.isHidden = !isHidden
         navigationController?.navigationBar.prefersLargeTitles = isHidden
@@ -151,6 +151,7 @@ final class ListViewController: UIViewController {
     }
 
     @objc private func sortButtonDidTap() {
+        // сортировка реализована без использования вьюМодели
         switch sortSegment.selectedSegmentIndex {
         case 0:
             self.movies.sort()
@@ -164,6 +165,7 @@ final class ListViewController: UIViewController {
 }
 
 extension ListViewController: UITableViewDataSource, UITableViewDelegate {
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         self.movies.count
     }
@@ -179,12 +181,16 @@ extension ListViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // обращение к вьюмодели
+        // тут можно грузить фильм через вьюМодель, но смысла в этом нет т.к. нет координаторов и модели фильмов одинаковые и там и там.
 //        viewModel.updateState(viewInput: .movieDidSelect(movies[indexPath.row]))
         
         tableView.deselectRow(at: indexPath, animated: true)
         let detailsViewController = DetailsViewController(movie: movies[indexPath.row])
         navigationController?.pushViewController(detailsViewController, animated: true)
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return tableView.numberOfRows(inSection: 0) > 2 ? sortSegment : nil
     }
 
 }

@@ -54,7 +54,7 @@ final class LoginViewModel: LoginViewModelProtocol {
                 UserSettings.isLogin = true
                 self.state = .login(user)
             } else {
-                print("Wrong Password 🛑")
+                print("Wrong Password 🛑\nВведите: 1234")
                 self.state = .error(.wrongPassword)
             }
         case .errorCanceling:

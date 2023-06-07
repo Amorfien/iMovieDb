@@ -42,6 +42,7 @@ final class LoginViewController: UIViewController {
         let password = TextFieldWithPadding()
         password.placeholder = "Password"
         password.backgroundColor = .systemGray5
+        password.keyboardType = .numberPad
         password.isSecureTextEntry = true
         password.font = UIFont.systemFont(ofSize: 16)
         password.autocapitalizationType = .none
@@ -71,10 +72,7 @@ final class LoginViewController: UIViewController {
 
     func bindViewModel() {
         viewModel.onStateDidChange = { [weak self] state in
-            guard let self else {
-                print("???????\n")
-                return
-            }
+            guard let self else { return }
             switch state {
             case .login(let user):
                 print("Success Login")
@@ -104,7 +102,6 @@ final class LoginViewController: UIViewController {
     }
 
     private func setupView() {
-//        loginTextField.text = UserSettings.lastUser?.login
         view.backgroundColor = .systemGray4
         view.addSubview(stackView)
         view.addSubview(loginButton)
@@ -115,22 +112,19 @@ final class LoginViewController: UIViewController {
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -80),
             stackView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
-            stackView.heightAnchor.constraint(equalToConstant: 100),
+            stackView.heightAnchor.constraint(equalToConstant: Resources.Sizes.spacer),
 
             loginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            loginButton.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 40),
-            loginButton.widthAnchor.constraint(equalToConstant: 200)
+            loginButton.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 2 * Resources.Sizes.padding),
+            loginButton.widthAnchor.constraint(equalToConstant: Resources.Sizes.buttonWidth)
         ])
     }
 
     @objc private func loginDidTap() {
         viewModel.updateState(viewInput: .loginButtonDidTap(user: User(login: loginTextField.text ?? "",
                                                                        password: passwordTextField.text ?? "")))
-//        let listViewModel = ListViewModel(networkService: NetworkService())
-//        let listViewController = ListViewController(viewModel: listViewModel)
-//        navigationController?.setViewControllers([listViewController], animated: true)
     }
-    //  MARK: hide keyboard by tap
+    //  жест чтобы скрывать клавиатуру по тапу
     private func setupGestures() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         view.addGestureRecognizer(tapGesture)

@@ -69,10 +69,10 @@ final class ListViewModel: ListViewModelProtocol {
 //                print("🌞 ", moviesData.count)
             }
         case let .movieDidSelect(movie):
-            print("test \(movie.title)")
+            print("push \(movie.title)")
 //            coordinator?
         case .logOut:
-            print("logoutout")
+            print("Logout 📌")
             UserSettings.isLogin = false
         case .alertClose:
             state = .initial
