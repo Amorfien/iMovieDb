@@ -15,8 +15,8 @@ final class MovieTableViewCell: UITableViewCell {
 
     private let movieImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.layer.cornerRadius = 8
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.cornerRadius = 5
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -32,15 +32,17 @@ final class MovieTableViewCell: UITableViewCell {
 
     private let ratingLabel = UILabel(numberOfLines: 1, textAlignment: .right, fontSize: 16, fontWeight: .semibold)
 
+    // MARK: - INIT
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupView()
-
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    // MARK: - Constraints
 
     private func setupView() {
 
@@ -78,11 +80,12 @@ final class MovieTableViewCell: UITableViewCell {
             ratingLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: -Resources.Sizes.inset),
             ratingLabel.bottomAnchor.constraint(equalTo: countryLabel.bottomAnchor),
             ratingLabel.widthAnchor.constraint(equalToConstant: Resources.Sizes.smallItem)
-            
         ])
 
     }
 
+    // MARK: - Public method
+    
     func fillData(with movie: Movie) {
         titleLabel.text = movie.title
         genreLabel.text = "\(movie.genre). \(movie.year) year"

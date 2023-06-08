@@ -17,7 +17,6 @@ final class LoginButton: UIButton {
 
     override var isHighlighted: Bool {
         didSet {
-//            alpha = isHighlighted ? 0.5 : 1.0
             backgroundColor = isHighlighted ? .darkGray : .tintColor
         }
     }
@@ -33,7 +32,6 @@ final class LoginButton: UIButton {
         backgroundColor = .tintColor
         titleLabel?.textColor = .white
         layer.cornerRadius = 10
-//        clipsToBounds = true
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOffset = CGSize(width: 5, height: 5)
         layer.shadowOpacity = 0.3

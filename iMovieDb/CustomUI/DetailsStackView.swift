@@ -7,6 +7,7 @@
 
 import UIKit
 
+// повторяет сабскрипт класа Movie. Скорее всего можно реализовать элегантнее.
 enum DetailType: String, CaseIterable {
     case year
     case released
@@ -28,6 +29,7 @@ enum DetailType: String, CaseIterable {
     case rated
 }
 
+/// горизонтальный стэк из двух UILabel с удобным инитом и публичным методом присвоения текста правому лэйблу
 final class DetailsStackView: UIStackView {
 
     private let leftLabel = UILabel(numberOfLines: 1, textAlignment: .left, fontSize: 14, fontWeight: .light)
@@ -37,7 +39,6 @@ final class DetailsStackView: UIStackView {
         super.init(frame: .zero)
         self.rightLabel.font = .systemFont(ofSize: fontSize, weight: fontWeight)
         self.leftLabel.text = type.rawValue.capitalized + ":"
-
         setup()
     }
     required init(coder: NSCoder) {

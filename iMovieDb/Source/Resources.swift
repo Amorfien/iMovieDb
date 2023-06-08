@@ -27,7 +27,7 @@ enum Resources {
     }
 
     enum Colors {
-        static let detailsBackground: UIColor = #colorLiteral(red: 0.8321695924, green: 0.985483706, blue: 0.4733308554, alpha: 1)
+        static let detailsBackground: UIColor = UIColor(named: "detailViewColor")!
         static let lightBlue: UIColor = #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1)
         static let lightRose: UIColor = #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1)
     }

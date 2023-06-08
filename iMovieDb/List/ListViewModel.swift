@@ -66,7 +66,6 @@ final class ListViewModel: ListViewModelProtocol {
                 case .failure(let error):
                     self.state = .error(error)
                 }
-//                print("🌞 ", moviesData.count)
             }
         case let .movieDidSelect(movie):
             print("push \(movie.title)")

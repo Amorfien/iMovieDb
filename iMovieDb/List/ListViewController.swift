@@ -9,6 +9,8 @@ import UIKit
 
 final class ListViewController: UIViewController {
 
+    // MARK: - Properties
+
     private let viewModel: ListViewModelProtocol
 
     private var movies: [Movie] = [] {
@@ -52,6 +54,8 @@ final class ListViewController: UIViewController {
         return segmentedControl
     }()
 
+    // MARK: - INIT
+    
     init(viewModel: ListViewModelProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -61,6 +65,8 @@ final class ListViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - LifeCycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigation()
@@ -68,35 +74,9 @@ final class ListViewController: UIViewController {
         bindViewModel()
     }
 
-    private func setupNavigation() {
-        navigationController?.navigationBar.prefersLargeTitles = true
-        self.title = "Hello, \(viewModel.user?.login ?? "NoName")!"
-        let logoutButton = UIBarButtonItem(image: UIImage(systemName: "door.right.hand.open"), style: .done, target: self, action: #selector(logout))
-        navigationItem.rightBarButtonItem = logoutButton
-    }
-    private func setupView() {
-        self.view.backgroundColor = .systemBackground
-        view.addSubview(movieTableView)
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(downloadButton)
-        view.addSubview(activityIndicator)
+    // MARK: - ViewModel Binding
 
-        NSLayoutConstraint.activate([
-            movieTableView.topAnchor.constraint(equalTo: view.topAnchor),
-            movieTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            movieTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            movieTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-
-            downloadButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            downloadButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 2 * Resources.Sizes.padding),
-            downloadButton.widthAnchor.constraint(equalToConstant: Resources.Sizes.buttonWidth),
-            
-            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: downloadButton.bottomAnchor, constant: Resources.Sizes.spacer),
-        ])
-    }
-
-    func bindViewModel() {
+    private func bindViewModel() {
         viewModel.onStateDidChange = { [weak self] state in
             guard let self = self else {
                 return
@@ -125,6 +105,37 @@ final class ListViewController: UIViewController {
         }
     }
 
+    // MARK: - Private methods
+
+    private func setupNavigation() {
+        navigationController?.navigationBar.prefersLargeTitles = true
+        self.title = "Hello, \(viewModel.user?.login ?? "NoName")!"
+        let logoutButton = UIBarButtonItem(image: UIImage(systemName: "door.right.hand.open"), style: .done, target: self, action: #selector(logout))
+        navigationItem.rightBarButtonItem = logoutButton
+    }
+    
+    private func setupView() {
+        self.view.backgroundColor = .systemBackground
+        view.addSubview(movieTableView)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(downloadButton)
+        view.addSubview(activityIndicator)
+
+        NSLayoutConstraint.activate([
+            movieTableView.topAnchor.constraint(equalTo: view.topAnchor),
+            movieTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            movieTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            movieTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            downloadButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            downloadButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 2 * Resources.Sizes.padding),
+            downloadButton.widthAnchor.constraint(equalToConstant: Resources.Sizes.buttonWidth),
+
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: downloadButton.bottomAnchor, constant: Resources.Sizes.spacer),
+        ])
+    }
+
     private func reload() {
         movieTableView.reloadData()
     }
@@ -139,6 +150,8 @@ final class ListViewController: UIViewController {
     private func updateLoadingAnimation(isLoading: Bool) {
         isLoading ? activityIndicator.startAnimating() : activityIndicator.stopAnimating()
     }
+
+    // MARK: - Actions
 
     @objc private func downloadDidTap() {
         viewModel.updateState(viewInput: .loadButtonDidTap)
@@ -163,6 +176,8 @@ final class ListViewController: UIViewController {
     }
 
 }
+
+// MARK: - Extensions
 
 extension ListViewController: UITableViewDataSource, UITableViewDelegate {
 

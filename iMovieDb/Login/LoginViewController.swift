@@ -9,6 +9,8 @@ import UIKit
 
 final class LoginViewController: UIViewController {
 
+    // MARK: - Properties
+
     private var viewModel: LoginViewModelProtocol
 
     private let stackView: UIStackView = {
@@ -42,7 +44,7 @@ final class LoginViewController: UIViewController {
         let password = TextFieldWithPadding()
         password.placeholder = "Password"
         password.backgroundColor = .systemGray5
-        password.keyboardType = .numberPad
+        password.keyboardType = .numbersAndPunctuation
         password.isSecureTextEntry = true
         password.font = UIFont.systemFont(ofSize: 16)
         password.autocapitalizationType = .none
@@ -70,7 +72,19 @@ final class LoginViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func bindViewModel() {
+    // MARK: - LifeCycle
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
+        setupGestures()
+        bindViewModel()
+        viewModel.checkLastUser()
+    }
+
+    // MARK: - ViewModel Binding
+
+    private func bindViewModel() {
         viewModel.onStateDidChange = { [weak self] state in
             guard let self else { return }
             switch state {
@@ -91,16 +105,8 @@ final class LoginViewController: UIViewController {
         }
     }
 
-
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupView()
-        setupGestures()
-        bindViewModel()
-        viewModel.checkLastUser()
-    }
-
+    // MARK: - Private methods
+    
     private func setupView() {
         view.backgroundColor = .systemGray4
         view.addSubview(stackView)
@@ -120,6 +126,8 @@ final class LoginViewController: UIViewController {
         ])
     }
 
+    // MARK: - Actions
+    
     @objc private func loginDidTap() {
         viewModel.updateState(viewInput: .loginButtonDidTap(user: User(login: loginTextField.text ?? "",
                                                                        password: passwordTextField.text ?? "")))
@@ -135,6 +143,8 @@ final class LoginViewController: UIViewController {
 
 
 }
+
+// MARK: - Extensions
 
 extension LoginViewController: UITextFieldDelegate {
     // скрывать кнопку ЛогИн при пустых полях

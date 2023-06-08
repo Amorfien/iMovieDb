@@ -9,6 +9,8 @@ import UIKit
 
 final class DetailsViewController: UIViewController {
 
+    // MARK: - Properties
+
     private var movie: Movie
 
     private let scrollView: UIScrollView = {
@@ -20,16 +22,19 @@ final class DetailsViewController: UIViewController {
 
     private let posterImageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
         imageView.layer.shadowColor = UIColor.black.cgColor
-        imageView.layer.shadowOffset = CGSize(width: 5, height: 5)
-        imageView.layer.shadowOpacity = 0.3
-        imageView.layer.shadowRadius = 5
+        imageView.layer.shadowOffset = .zero
+        imageView.layer.shadowOpacity = 0.7
+        imageView.layer.shadowRadius = 12
         return imageView
     }()
 
     private let verticalStack = UIStackView()
     private let plotLabel = UILabel(numberOfLines: 0, textAlignment: .justified, fontSize: 18, fontWeight: .medium)
 
+    // MARK: - INIT
+    
     init(movie: Movie) {
         self.movie = movie
         super.init(nibName: nil, bundle: nil)
@@ -38,23 +43,16 @@ final class DetailsViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.blue]
-    }
+    
+    // MARK: - LifeCycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
         fillData()
-
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black]
-    }
+    // MARK: - Private methods
 
     private func setupView() {
         self.title = movie.title
@@ -68,7 +66,6 @@ final class DetailsViewController: UIViewController {
             view.translatesAutoresizingMaskIntoConstraints = false
         }
 
-        posterImageView.contentMode = .scaleAspectFit
         verticalStack.axis = .vertical
         verticalStack.distribution = .equalSpacing
 
@@ -93,7 +90,9 @@ final class DetailsViewController: UIViewController {
             plotLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Resources.Sizes.padding),
         ])
 
-
+        // автоматизированное создание однотипных элементов. Процесс разделён на две части:
+        // - часть элементов в вертикальном стэке, равному по высоте размеру постера
+        // - оставшиеся элементы помещённые на скролл-вью с равным отступом (не идеальный вариант с точки зрения дизайна. Просто автоматизация)
         for (ind, line) in DetailType.allCases.enumerated() {
             switch line {
             case .title, .plot:
@@ -119,6 +118,7 @@ final class DetailsViewController: UIViewController {
 
     }
 
+    // Заполнение оставшихся неавтоматизированных элементов
     private func fillData() {
 
         if  let data = movie.posterData {

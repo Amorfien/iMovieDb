@@ -76,12 +76,9 @@ final class NetworkService: NetworkServiceProtocol {
                     } catch {
                         print("❗️ Decode Error")
                         completion(.failure(.decodeError))
-                        // TODO: - ??
-                        group.leave()// нужно ли тут выходить? После failure сработает success completion. С пустым массивом или кэшем. А если не выходить, то после ошибки (например был откл WiFi) уже нельзя получить результат после её устранения
                     }
                 case .failure(let error): print("‼️ Request Error ", error)
                     completion(.failure(error))
-                    group.leave()// --//--
                 }
             }
 
@@ -94,6 +91,4 @@ final class NetworkService: NetworkServiceProtocol {
 
     }
 
-
-    
 }

@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// обёртка над UserDefaults
 final class UserSettings {
 
     enum SettingsKeys: String {//}, CaseIterable {
@@ -21,7 +22,6 @@ final class UserSettings {
             UserDefaults.standard.set(newValue, forKey: SettingsKeys.isLogin.rawValue)
         }
     }
-
 
     static var lastUser: User? {
         get {
