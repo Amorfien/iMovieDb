@@ -28,7 +28,8 @@ final class NetworkService: NetworkServiceProtocol {
             completion(.failure(.badURL))
             return
         }
-        URLSession.shared.dataTask(with: apiURL) { data, response, error in
+        let request = URLRequest(url: apiURL,cachePolicy: .reloadIgnoringCacheData)
+        URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data else {
                 if error != nil {
                     completion(.failure(.noData))

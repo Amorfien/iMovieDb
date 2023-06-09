@@ -63,6 +63,7 @@ final class ListViewModel: ListViewModelProtocol {
 
                 case .success(let moviesData):
                     self.state = .loaded(movies: moviesData.sorted())
+                    UserSettings.cacheMovieList = moviesData.sorted()
                 case .failure(let error):
                     self.state = .error(error)
                 }
@@ -74,7 +75,11 @@ final class ListViewModel: ListViewModelProtocol {
             print("Logout 📌")
             UserSettings.isLogin = false
         case .alertClose:
-            state = .initial
+            if let cache = UserSettings.cacheMovieList {
+                state = .loaded(movies: cache)
+            } else {
+                state = .initial
+            }
         }
     }
 }

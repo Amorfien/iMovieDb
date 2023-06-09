@@ -74,13 +74,12 @@ struct Movie: Codable {
     // перевод минут в часы+минуты
     private func timeFormatter(runtime: String) -> String {
 
-        guard let minutesStr = runtime.components(separatedBy: " min").first else { return "" }
-
+        guard let minutesStr = runtime.components(separatedBy: " min").first else { return runtime }
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.hour, .minute]
         formatter.unitsStyle = .abbreviated
 
-        let minutes = Int(minutesStr)
+        guard let minutes = Int(minutesStr) else { return runtime }
         return formatter.string(from: .init(minute: minutes)) ?? ""
 
     }

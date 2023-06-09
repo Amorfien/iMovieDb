@@ -13,6 +13,7 @@ final class UserSettings {
     enum SettingsKeys: String {//}, CaseIterable {
         case isLogin
         case lastUser
+        case movieListCache
     }
 
     static var isLogin: Bool {
@@ -35,5 +36,22 @@ final class UserSettings {
         }
     }
 
+    static var cacheMovieList: [Movie]? {
+        get {
+            if let data = UserDefaults.standard.object(forKey: SettingsKeys.movieListCache.rawValue) as? Data,
+               let movies = try? JSONDecoder().decode([Movie].self, from: data) {
+                return movies
+            }
+            return nil
+        } set {
+            var cacheList: [Movie] = []
+            newValue?.forEach({ movie in
+                var cache = movie
+                cache.posterData = nil
+                cacheList.append(cache)
+            })
+            UserDefaults.standard.set(try? JSONEncoder().encode(cacheList), forKey: SettingsKeys.movieListCache.rawValue)
+        }
+    }
 
 }
