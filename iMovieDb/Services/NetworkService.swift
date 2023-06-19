@@ -13,18 +13,23 @@ protocol NetworkServiceProtocol: AnyObject {
 
 final class NetworkService: NetworkServiceProtocol {
 
-    private let tunnel = "http://"
-    private let server = "www.omdbapi.com/?i="
-
-    // obfuscation API-key
-    private let coded: [UInt8] = [0x26, 0x61, 0x70, 0x69, 0x6b, 0x65, 0x79, 0x3d, 0x35, 0x65, 0x38, 0x62, 0x36, 0x62, 0x66, 0x63]
-
     // MARK: - URL session
     private func movieSession(movieId: String, completion: @escaping (Result<Data, ListError>) -> Void) {
-        let data = Data(coded)
-        let apiKey = String(data: data, encoding: .utf8) ?? ""
-        let urlStr = tunnel + server + movieId + apiKey
-        guard let apiURL = URL(string: urlStr) else {
+
+        let urlComponents: URLComponents = {
+            let codedApiKey: [UInt8] = [0x35, 0x65, 0x38, 0x62, 0x36, 0x62, 0x66, 0x63]
+            var url = URLComponents()
+            url.scheme = "http"
+            url.host = "www.omdbapi.com"
+            url.path = "/"
+            url.queryItems = [
+                URLQueryItem(name: "i", value: movieId),
+                URLQueryItem(name: "apikey", value: String(data: Data(codedApiKey), encoding: .utf8))
+            ]
+            return url
+        }()
+
+        guard let apiURL = urlComponents.url else {
             completion(.failure(.badURL))
             return
         }
@@ -38,6 +43,7 @@ final class NetworkService: NetworkServiceProtocol {
             completion(.success(data))
         }.resume()
     }
+
     private func imageSession(urlString: String, completion: @escaping (Data?) -> Void) {
         guard let url = URL(string: urlString) else {
             print("⚔️ No URL")
@@ -54,7 +60,7 @@ final class NetworkService: NetworkServiceProtocol {
         task.resume()
     }
 
-
+    // MARK: - Public method
     func loadMovies(movieList: [String], completion: @escaping (Result<[Movie], ListError>) -> Void) {
 
         let group = DispatchGroup()
