@@ -37,6 +37,8 @@ final class ListViewController: UIViewController {
         let tableView = UITableView()
         tableView.register(MovieTableViewCell.self, forCellReuseIdentifier: MovieTableViewCell.cellIdentifier)
         tableView.rowHeight = Resources.Sizes.rowHeight
+        tableView.separatorInset = .zero
+        tableView.separatorColor = .tintColor
         tableView.showsVerticalScrollIndicator = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.isHidden = true
