@@ -37,6 +37,7 @@ final class LoginButton: UIButton {
         layer.shadowOpacity = 0.3
         layer.shadowRadius = 5
         translatesAutoresizingMaskIntoConstraints = false
+        heightAnchor.constraint(equalToConstant: 2 * Resources.Sizes.padding).isActive = true
     }
 
     required init?(coder: NSCoder) {
