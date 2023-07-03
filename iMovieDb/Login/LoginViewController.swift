@@ -116,13 +116,14 @@ final class LoginViewController: UIViewController {
 
         NSLayoutConstraint.activate([
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -80),
+            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -4 * Resources.Sizes.padding),
             stackView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
             stackView.heightAnchor.constraint(equalToConstant: Resources.Sizes.spacer),
 
             loginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            loginButton.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 2 * Resources.Sizes.padding),
-            loginButton.widthAnchor.constraint(equalToConstant: Resources.Sizes.buttonWidth)
+            loginButton.widthAnchor.constraint(equalToConstant: Resources.Sizes.buttonWidth),
+            loginButton.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor, constant: -Resources.Sizes.spacer),
+            loginButton.bottomAnchor.constraint(greaterThanOrEqualTo: view.keyboardLayoutGuide.topAnchor, constant: -40)
         ])
     }
 
